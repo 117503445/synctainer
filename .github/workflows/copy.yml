@@ -14,11 +14,8 @@ on:
         required: false
         default: 'latest' 
 env:
-  IMAGE:  ${{ github.event.inputs.image }}
-  TAG: ${{ github.event.inputs.tag }}
-  
-  OLDIMAGE: "${{ github.event.inputs.namespace }}/$IMAGE:$TAG"
-  NEWIMAGE: "registry.cn-hangzhou.aliyuncs.com/117503445-mirror/$IMAGE:$TAG"
+  OLDIMAGE: "${{ github.event.inputs.namespace }}/${{ github.event.inputs.image }}:${{ github.event.inputs.tag }}"
+  NEWIMAGE: "registry.cn-hangzhou.aliyuncs.com/117503445-mirror/${{ github.event.inputs.image }}:${{ github.event.inputs.tag }}"
 
 jobs:
   build:
