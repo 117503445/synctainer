@@ -1,0 +1,35 @@
+name: copy
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  REGION_ID: cn-hangzhou
+  REGISTRY: registry.cn-hangzhou.aliyuncs.com
+  NAMESPACE: docker1175
+  IMAGE: pause
+  # TAG: ${{ github.sha }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Login to ACR with the AccessKey pair
+        uses: aliyun/acr-login@v1
+        with:
+          login-server: https://registry.cn-hangzhou.aliyuncs.com
+          username: "${{ secrets.REGISTRY_USERNAME }}"
+          password: "${{ secrets.REGISTRY_PASSWORD }}"
+
+      - name: Build and push image to ACR
+        run: |
+          docker pull gcr.io/google_containers/pause
+          docker tag gcr.io/google_containers/pause "$REGISTRY/$NAMESPACE/$IMAGE:latest"
+          docker push "$REGISTRY/$NAMESPACE/$IMAGE:latest"
