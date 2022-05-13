@@ -38,6 +38,6 @@ jobs:
 
       - name: Build and push image to ACR
         run: |
-          docker pull "$FULLIMAGE"
-          docker tag "$FULLIMAGE" "$REGISTRY/$NAMESPACE/$IMAGE:$TAG"
-          docker push "$REGISTRY/$NAMESPACE/$IMAGE:$TAG"
+          docker pull "$OLDIMAGE"
+          docker tag "$OLDIMAGE" "$NEWIMAGE"
+          docker push "$NEWIMAGE"
