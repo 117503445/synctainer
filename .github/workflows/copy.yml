@@ -1,9 +1,6 @@
 name: copy
 
 on:
-#   push:
-#     branches:
-#       - master
   workflow_dispatch:
     inputs:
       full_image:
@@ -19,7 +16,7 @@ on:
 env:
   REGION_ID: cn-hangzhou
   REGISTRY: registry.cn-hangzhou.aliyuncs.com
-  NAMESPACE: docker1175
+  NAMESPACE: 117503445-mirror
   FULLIMAGE: ${{ github.event.inputs.full_image }}
   IMAGE:  ${{ github.event.inputs.image }}
   TAG: ${{ github.event.inputs.tag }}
