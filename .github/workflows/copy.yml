@@ -13,6 +13,10 @@ on:
         description: 'container tag'     
         required: false
         default: 'latest' 
+      platform:
+        description: 'container platform, exp: "linux/amd64"'     
+        required: false
+        default: 'linux/amd64'
 env:
   OLDIMAGE: "${{ github.event.inputs.namespace }}/${{ github.event.inputs.image }}:${{ github.event.inputs.tag }}"
   NEWIMAGE: "registry.cn-hangzhou.aliyuncs.com/117503445-mirror/${{ github.event.inputs.image }}:${{ github.event.inputs.tag }}"
@@ -35,6 +39,6 @@ jobs:
 
       - name: Build and push image to ACR
         run: |
-          docker pull "$OLDIMAGE"
+          docker pull --platform "${{ github.event.inputs.platform }}" "$OLDIMAGE"
           docker tag "$OLDIMAGE" "$NEWIMAGE"
           docker push "$NEWIMAGE"
