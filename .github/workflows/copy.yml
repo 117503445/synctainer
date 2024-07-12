@@ -19,7 +19,7 @@ on:
         default: 'linux/amd64'
 env:
   OLDIMAGE: "${{ github.event.inputs.namespace }}/${{ github.event.inputs.image }}:${{ github.event.inputs.tag }}"
-  NEWIMAGE: "registry.cn-hangzhou.aliyuncs.com/117503445-mirror/${{ github.event.inputs.image }}.{{ github.event.inputs.platform }}:${{ github.event.inputs.tag }}"
+  NEWIMAGE: "registry.cn-hangzhou.aliyuncs.com/117503445-mirror/${{ github.event.inputs.image }}:${{ github.event.inputs.tag }}"
 
 jobs:
   build:
