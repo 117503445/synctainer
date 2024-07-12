@@ -1,0 +1,13 @@
+services:
+  container-copier-dev:
+    build:
+      context: ./
+      dockerfile: Dockerfile.dev
+    volumes:
+        - ./:/workspace
+        - container-copier-dev-vsc:/root/.vscode-server
+    stdin_open: true
+    tty: true
+
+volumes:
+  container-copier-dev-vsc:
