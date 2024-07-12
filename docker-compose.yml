@@ -1,0 +1,15 @@
+services:
+  fc-examples-dev:
+    build:
+      context: ./
+      dockerfile: Dockerfile.dev
+    volumes:
+        - ./:/workspace
+        - fc-examples-dev-vsc:/root/.vscode-server
+        - ~/.ssh:/root/.ssh:ro
+    stdin_open: true
+    tty: true
+    working_dir: /workspace
+
+volumes:
+  fc-examples-dev-vsc:
