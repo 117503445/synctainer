@@ -1,0 +1,30 @@
+name: Github Release
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+
+      # https://github.com/actions/setup-go
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+
+      - run: go test ./...
+
+      - run: go build -ldflags "-s -w" -o copier .
+
+      # https://github.com/softprops/action-gh-release
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            copier
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

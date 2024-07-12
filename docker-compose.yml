@@ -1,15 +1,13 @@
 services:
-  fc-examples-dev:
+  container-copier-dev:
     build:
       context: ./
       dockerfile: Dockerfile.dev
     volumes:
         - ./:/workspace
-        - fc-examples-dev-vsc:/root/.vscode-server
-        - ~/.ssh:/root/.ssh:ro
+        - container-copier-dev-vsc:/root/.vscode-server
     stdin_open: true
     tty: true
-    working_dir: /workspace
 
 volumes:
-  fc-examples-dev-vsc:
+  container-copier-dev-vsc:
