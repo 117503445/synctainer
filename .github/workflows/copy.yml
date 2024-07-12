@@ -3,23 +3,13 @@ name: copy
 on:
   workflow_dispatch:
     inputs:
-      namespace:
-        description: 'registry(optional) & namespace, exp: "gcr.io/google_containers" "docker.io"'     
-        required: true
       image:
-        description: 'container name, exp: "pause"'     
+        description: "image name, exp: mysql, ghcr.io/devcontainers/features/anaconda:1, ubuntu:18.04@sha256:98706f0f213dbd440021993a82d2f70451a73698315370ae8615cc468ac06624"
         required: true
-      tag:
-        description: 'container tag'     
-        required: false
-        default: 'latest' 
       platform:
-        description: 'container platform, exp: "linux/amd64"'     
+        description: 'container platform, exp: "linux/amd64"'
         required: false
-        default: 'linux/amd64'
-env:
-  OLDIMAGE: "${{ github.event.inputs.namespace }}/${{ github.event.inputs.image }}:${{ github.event.inputs.tag }}"
-  NEWIMAGE: "registry.cn-hangzhou.aliyuncs.com/117503445-mirror/${{ github.event.inputs.image }}:${{ github.event.inputs.tag }}"
+        default: "linux/amd64"
 
 jobs:
   build:
@@ -27,9 +17,6 @@ jobs:
     environment: production
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
       - name: Login to ACR with the AccessKey pair
         uses: aliyun/acr-login@v1
         with:
@@ -37,8 +24,9 @@ jobs:
           username: "${{ secrets.REGISTRY_USERNAME }}"
           password: "${{ secrets.REGISTRY_PASSWORD }}"
 
-      - name: Build and push image to ACR
+      - name: Copy image
         run: |
-          docker pull --platform "${{ github.event.inputs.platform }}" "$OLDIMAGE"
-          docker tag "$OLDIMAGE" "$NEWIMAGE"
-          docker push "$NEWIMAGE"
+          wget https://github.com/117503445/container-copier/releases/latest/download/copier && chmod +x copier && ./copier
+        env:
+          IMAGE: "${{ github.event.inputs.image }}"
+          PLATFORM: "${{ github.event.inputs.platform }}"
