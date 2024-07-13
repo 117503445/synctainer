@@ -27,7 +27,7 @@ jobs:
 
       - name: Copy image
         run: |
-          wget https://github.com/117503445/container-copier/releases/latest/download/copier && chmod +x copier && ./copier
+          wget https://github.com/117503445/synctainer/releases/latest/download/copier && chmod +x copier && ./copier
         env:
           IMAGE: "${{ github.event.inputs.image }}"
           PLATFORM: "${{ github.event.inputs.platform }}"
