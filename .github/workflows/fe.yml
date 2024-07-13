@@ -1,0 +1,40 @@
+name: fe
+
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # https://github.com/actions/checkout
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # https://github.com/actions/setup-node
+      - name: install node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      # https://github.com/pnpm/action-setup
+      - name: install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9.4.0
+
+      - name: build dist
+        run: |
+          cd ./src/fe/container-sync
+          pnpm install
+          pnpm build
+
+      - name: upload files to OSS
+        uses: fangbinwei/aliyun-oss-website-action@v1
+        with:
+          accessKeyId: ${{ secrets.ACCESS_KEY_ID }}
+          accessKeySecret: ${{ secrets.ACCESS_KEY_SECRET }}
+          bucket: synctainer
+          endpoint: https://oss-rg-china-mainland.aliyuncs.com
+          folder: ./src/fe/container-sync/dist

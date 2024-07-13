@@ -9,7 +9,9 @@ jobs:
   update-befc-version:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      # https://github.com/actions/checkout
+      - name: Checkout
+        uses: actions/checkout@v4
 
       # https://github.com/actions/setup-node
       - name: install node

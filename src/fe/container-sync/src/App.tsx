@@ -1,7 +1,7 @@
 import './App.css'
 
 import { useState } from 'react'
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
@@ -14,9 +14,9 @@ import Link from '@mui/material/Link';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 
-type TriggerResp = {
-  image: string
-}
+// type TriggerResp = {
+//   image: string
+// }
 
 
 const platforms = [
@@ -68,7 +68,7 @@ function App() {
           options={platforms}
           renderInput={(params) => <TextField {...params} label="Platform" />}
           defaultValue={"linux/amd64"}
-          onChange={(e, value) => {
+          onChange={(_, value) => {
             if (value) {
               setPlatform(value)
             }
@@ -88,8 +88,8 @@ function App() {
             let response = await fetch(`${host}`, {
               method: 'POST',
               body: JSON.stringify({
-                image: "busybox",
-                platform: "linux/amd64",
+                image: image,
+                platform: platform,
               }),
               headers: {
                 'Content-Type': 'application/json',
