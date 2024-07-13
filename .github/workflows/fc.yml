@@ -9,6 +9,8 @@ jobs:
   update-befc-version:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@master
+
       # https://github.com/actions/setup-node
       - name: install node
         uses: actions/setup-node@v4
@@ -22,14 +24,14 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: "1.22"
-          
+
       # https://help.aliyun.com/document_detail/295913.html
       - name: deploy
-        # working-directory: src/fcbe/container-copier
+        working-directory: src/fcbe/container-copier
         run: |
           ls
           pwd
-          cd src/fcbe/container-copier
+          # cd src/fcbe/container-copier
           s config add --AccountID ${{secrets.AccountID}} --AccessKeyID ${{secrets.FC_ACCESS_KEY_ID}} --AccessKeySecret ${{secrets.FC_ACCESS_KEY_SECRET}} -a default
 
           s deploy
