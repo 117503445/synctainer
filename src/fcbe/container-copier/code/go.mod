@@ -1,6 +1,6 @@
 module github.com/117503445/container-copier/src/fcbe
 
-go 1.22.5
+go 1.22
 
 require (
 	github.com/aliyun/fc-runtime-go-sdk v0.2.7
