@@ -33,4 +33,5 @@ jobs:
         run: |
           s config add --AccountID ${{secrets.AccountID}} --AccessKeyID ${{secrets.FC_ACCESS_KEY_ID}} --AccessKeySecret ${{secrets.FC_ACCESS_KEY_SECRET}} -a default
 
-          s deploy -y
+          # --function code: deploy the code, excluding the configuration
+          s deploy -y --function code
