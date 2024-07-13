@@ -1,15 +1,15 @@
 module github.com/117503445/synctainer/src/fcbe
 
-go 1.22
+go 1.22.5
 
 require (
+	github.com/117503445/synctainer/src/gh v0.0.0-20240713160248-30cbbc857233
 	github.com/aliyun/fc-runtime-go-sdk v0.2.7
 	github.com/imroc/req/v3 v3.43.7
 	github.com/stretchr/testify v1.9.0
 )
 
 require (
-	github.com/117503445/synctainer v0.0.0-20240713153548-778f1801fa9f // indirect
 	github.com/andybalholm/brotli v1.1.0 // indirect
 	github.com/cloudflare/circl v1.3.7 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -18,6 +18,7 @@ require (
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/klauspost/compress v1.17.7 // indirect
+	github.com/novln/docker-parser v1.0.0 // indirect
 	github.com/onsi/ginkgo/v2 v2.16.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/quic-go/qpack v0.4.0 // indirect
@@ -28,7 +29,7 @@ require (
 	golang.org/x/exp v0.0.0-20240222234643-814bf88cf225 // indirect
 	golang.org/x/mod v0.16.0 // indirect
 	golang.org/x/net v0.22.0 // indirect
-	golang.org/x/sys v0.18.0 // indirect
+	golang.org/x/sys v0.22.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/tools v0.19.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect

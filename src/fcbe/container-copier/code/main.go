@@ -117,14 +117,26 @@ func HandleRequest(event HTTPTriggerEvent) (*HTTPTriggerResponse, error) {
 		return NewHTTPTriggerResponse(http.StatusBadRequest).WithBody(fmt.Sprintf("failed to unmarshal request body, err: %v", err)), nil
 	}
 
+	newImage, err := convert.ConvertToNewImage(triggerReq.Image)
+	if err != nil {
+		return NewHTTPTriggerResponse(http.StatusInternalServerError).WithBody(err.Error()), nil
+	}
+
 	err = gh.TriggerGithubAction(triggerReq.Image, triggerReq.Platform)
 	if err != nil {
 		return NewHTTPTriggerResponse(http.StatusInternalServerError).WithBody(err.Error()), nil
 	}
 
-	convert.ConvertImage(triggerReq.Image)
+	resp := TriggerResponse{
+		Image: newImage,
+	}
 
-	return NewHTTPTriggerResponse(http.StatusOK).WithBody(reqBody), nil
+	respBytes, err := json.Marshal(resp)
+	if err != nil {
+		return NewHTTPTriggerResponse(http.StatusInternalServerError).WithBody(err.Error()), nil
+	}
+
+	return NewHTTPTriggerResponse(http.StatusOK).WithBody(string(respBytes)), nil
 }
 
 /*
