@@ -10,7 +10,10 @@ jobs:
     permissions:
       contents: write
     runs-on: ubuntu-latest'
-    working-directory: ./src/gh
+    defaults:
+      run:
+        working-directory: ./src/gh
+
     steps:
       - uses: actions/checkout@master
 
