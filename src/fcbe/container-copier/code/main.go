@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/117503445/container-copier/src/fcbe/pkg/gh"
+	"github.com/117503445/synctainer/src/fcbe/pkg/gh"
+	"github.com/117503445/synctainer/src/gh/pkg/convert"
+
 	"github.com/aliyun/fc-runtime-go-sdk/fc"
 )
 
@@ -89,7 +91,7 @@ type TriggerRequest struct {
 }
 
 type TriggerResponse struct {
-	Image	string `json:"image"`
+	Image string `json:"image"`
 }
 
 func HandleRequest(event HTTPTriggerEvent) (*HTTPTriggerResponse, error) {
@@ -119,6 +121,8 @@ func HandleRequest(event HTTPTriggerEvent) (*HTTPTriggerResponse, error) {
 	if err != nil {
 		return NewHTTPTriggerResponse(http.StatusInternalServerError).WithBody(err.Error()), nil
 	}
+
+	// convert.
 
 	return NewHTTPTriggerResponse(http.StatusOK).WithBody(reqBody), nil
 }

@@ -1,4 +1,4 @@
-module github.com/117503445/container-copier/src/fcbe
+module github.com/117503445/synctainer/src/fcbe
 
 go 1.22
 

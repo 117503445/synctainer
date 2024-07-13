@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/117503445/container-copier/src/gh/pkg/convert"
+	"github.com/117503445/synctainer/src/gh/pkg/convert"
 	"github.com/117503445/goutils"
 	
 	"github.com/rs/zerolog/log"

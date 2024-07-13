@@ -1,4 +1,4 @@
-module github.com/117503445/container-copier/src/gh
+module github.com/117503445/synctainer/src/gh
 
 go 1.22.5
 
