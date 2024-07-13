@@ -1,7 +1,9 @@
-package main
+package convert_test
 
 import (
 	"testing"
+
+	"github.com/117503445/container-copier/src/gh/pkg/convert"
 
 	dockerparser "github.com/novln/docker-parser"
 	"github.com/rs/zerolog/log"
@@ -48,7 +50,7 @@ func TestConvertToNewImage(t *testing.T) {
 		},
 	}
 	for _, c := range cases {
-		newImage, err := ConvertToNewImage(c.image)
+		newImage, err := convert.ConvertToNewImage(c.image)
 		ast.NoError(err)
 		ast.Equal(c.expected, newImage)
 	}

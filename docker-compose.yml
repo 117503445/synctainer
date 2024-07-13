@@ -1,11 +1,11 @@
 services:
-  container-copier-dev:
+  gh-dev:
     build:
-      context: ./
+      context: ./src/gh
       dockerfile: Dockerfile.dev
     volumes:
-        - ./:/workspace
-        - container-copier-dev-vsc:/root/.vscode-server
+        - ./src/gh:/workspace
+        - gh-dev-vsc:/root/.vscode-server
     stdin_open: true
     tty: true
 
@@ -30,6 +30,6 @@ services:
     tty: true
 
 volumes:
-  container-copier-dev-vsc:
+  gh-dev-vsc:
   fcbe-dev-vsc:
   fe-dev-vsc:

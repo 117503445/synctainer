@@ -1,14 +1,10 @@
-package main
+package convert
 
 import (
 	"errors"
-	"os"
 	"strings"
 
-	"github.com/117503445/goutils"
 	dockerparser "github.com/novln/docker-parser"
-
-	"github.com/rs/zerolog/log"
 )
 
 const (
@@ -45,39 +41,4 @@ func ConvertToNewImage(image string) (string, error) {
 	newImage := NEW_REGISTRY + "/" + NEW_USERNAME + "/" + reference.Registry() + "." + username + "." + name + suffix
 
 	return newImage, nil
-}
-
-func main() {
-	goutils.InitZeroLog()
-
-	image := os.Getenv("IMAGE")
-	if image == "" {
-		log.Fatal().Msg("Image is required")
-	}
-
-	platform := os.Getenv("PLATFORM")
-	if platform == "" {
-		platform = "linux/amd64"
-	}
-
-	log.Info().Str("image", image).Str("platform", platform).Msg("load env")
-
-	newImage, err := ConvertToNewImage(image)
-	if err != nil {
-		log.Fatal().Err(err).Msg("ConvertToNewImage")
-	}
-
-	log.Info().Str("newImage", newImage).Msg("ConvertToNewImage")
-
-	if err := goutils.CMD("", "docker", "pull", "--platform", platform, image); err != nil {
-		log.Fatal().Err(err).Msg("docker pull")
-	}
-
-	if err := goutils.CMD("", "docker", "tag", image, newImage); err != nil {
-		log.Fatal().Err(err).Msg("docker tag")
-	}
-
-	if err := goutils.CMD("", "docker", "push", newImage); err != nil {
-		log.Fatal().Err(err).Msg("docker push")
-	}
 }
