@@ -88,6 +88,10 @@ type TriggerRequest struct {
 	Platform string `json:"platform"`
 }
 
+type TriggerResponse struct {
+	Image	string `json:"image"`
+}
+
 func HandleRequest(event HTTPTriggerEvent) (*HTTPTriggerResponse, error) {
 	fmt.Printf("event: %v\n", event)
 	if event.Body == nil {

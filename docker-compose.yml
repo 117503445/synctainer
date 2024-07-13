@@ -19,6 +19,17 @@ services:
     stdin_open: true
     tty: true
 
+  fe-dev:
+    build:
+      context: ./src/fe
+      dockerfile: Dockerfile.dev
+    volumes:
+        - ./src/fe:/workspace
+        - fe-dev-vsc:/root/.vscode-server
+    stdin_open: true
+    tty: true
+
 volumes:
   container-copier-dev-vsc:
   fcbe-dev-vsc:
+  fe-dev-vsc:
