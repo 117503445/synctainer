@@ -9,6 +9,7 @@ require (
 )
 
 require (
+	github.com/117503445/synctainer v0.0.0-20240713153548-778f1801fa9f // indirect
 	github.com/andybalholm/brotli v1.1.0 // indirect
 	github.com/cloudflare/circl v1.3.7 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect

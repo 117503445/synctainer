@@ -1,4 +1,6 @@
 dmitri.shuralyov.com/gpu/mtl v0.0.0-20190408044501-666a987793e9/go.mod h1:H6x//7gZCb22OMCxBHrMx7a5I7Hp++hsVxbQ4BYO7hU=
+github.com/117503445/synctainer v0.0.0-20240713153548-778f1801fa9f h1:AqcV8v9FS4y+f3bQDKccSor/56cXinvuQJFXtNJfUeA=
+github.com/117503445/synctainer v0.0.0-20240713153548-778f1801fa9f/go.mod h1:uqTsi4I37cM23j83h9uytDwecp+EAhxM1RwkDmg14xk=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/HdrHistogram/hdrhistogram-go v1.1.2/go.mod h1:yDgFjdqOqDEKOvasDdhWNXYg9BVp4O+o5f6V/ehm6Oo=

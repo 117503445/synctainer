@@ -122,7 +122,7 @@ func HandleRequest(event HTTPTriggerEvent) (*HTTPTriggerResponse, error) {
 		return NewHTTPTriggerResponse(http.StatusInternalServerError).WithBody(err.Error()), nil
 	}
 
-	// convert.
+	convert.ConvertImage(triggerReq.Image)
 
 	return NewHTTPTriggerResponse(http.StatusOK).WithBody(reqBody), nil
 }
