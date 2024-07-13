@@ -58,6 +58,8 @@ const platforms = [
 
 function App() {
 
+  const host = "https://containr-copier-kawdvytifk.cn-hangzhou.fcapp.run"
+
   return (
     <>
       <Stack spacing={2} sx={{ width: 300 }}>
@@ -74,7 +76,20 @@ function App() {
 
 
 
-        <Button variant="contained">Sync</Button>
+        <Button variant="contained" onClick={async () => {
+          // POST
+          await fetch(`${host}`, {
+            method: 'POST',
+            body: JSON.stringify({
+              image: "busybox",
+              platform: "linux/amd64",
+            }),
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          })
+
+        }}>Sync</Button>
 
         <CopyTextField />
         <Link href="https://github.com/117503445/container-copier/actions/workflows/copy.yml">See Progress</Link>
