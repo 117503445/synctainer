@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/117503445/container-copier/src/fcbe/pkg/gh"
 	"github.com/aliyun/fc-runtime-go-sdk/fc"
 )
 
@@ -82,7 +83,10 @@ func (h *HTTPTriggerResponse) WithBody(body string) *HTTPTriggerResponse {
 	return h
 }
 
-
+type TriggerRequest struct {
+	Image    string `json:"image"`
+	Platform string `json:"platform"`
+}
 
 func HandleRequest(event HTTPTriggerEvent) (*HTTPTriggerResponse, error) {
 	fmt.Printf("event: %v\n", event)
@@ -101,7 +105,16 @@ func HandleRequest(event HTTPTriggerEvent) (*HTTPTriggerResponse, error) {
 		reqBody = string(decodedByte)
 	}
 
-	triggerGithubAction()
+	var triggerReq TriggerRequest
+	err := json.Unmarshal([]byte(reqBody), &triggerReq)
+	if err != nil {
+		return NewHTTPTriggerResponse(http.StatusBadRequest).WithBody(fmt.Sprintf("failed to unmarshal request body, err: %v", err)), nil
+	}
+
+	err = gh.TriggerGithubAction(triggerReq.Image, triggerReq.Platform)
+	if err != nil {
+		return NewHTTPTriggerResponse(http.StatusInternalServerError).WithBody(err.Error()), nil
+	}
 
 	return NewHTTPTriggerResponse(http.StatusOK).WithBody(reqBody), nil
 }

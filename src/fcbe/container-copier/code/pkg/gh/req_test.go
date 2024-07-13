@@ -10,7 +10,7 @@ import (
 func TestTriggerGithubAction(t *testing.T) {
 	ast := assert.New(t)
 
-	err := gh.TriggerGithubAction()
+	err := gh.TriggerGithubAction("mysql", "linux/amd64")
 
 	ast.NoError(err)
 }

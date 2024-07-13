@@ -1,4 +1,5 @@
 name: copy
+run-name: "Copy ${{ github.event.inputs.image }} ${{ github.event.inputs.platform }} to ACR"
 
 on:
   workflow_dispatch:
