@@ -1,0 +1,1 @@
+curl https://containr-copier-kawdvytifk.cn-hangzhou.fcapp.run -d "{\"image\":\"mysql\"}"
