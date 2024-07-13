@@ -25,8 +25,11 @@ jobs:
           
       # https://help.aliyun.com/document_detail/295913.html
       - name: deploy
-        working-directory: src/fcbe/container-copier
+        # working-directory: src/fcbe/container-copier
         run: |
+          ls
+          pwd
+          cd src/fcbe/container-copier
           s config add --AccountID ${{secrets.AccountID}} --AccessKeyID ${{secrets.FC_ACCESS_KEY_ID}} --AccessKeySecret ${{secrets.FC_ACCESS_KEY_SECRET}} -a default
 
           s deploy
