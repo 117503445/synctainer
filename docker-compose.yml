@@ -9,5 +9,16 @@ services:
     stdin_open: true
     tty: true
 
+  fcbe-dev:
+    build:
+      context: ./src/fcbe
+      dockerfile: Dockerfile.dev
+    volumes:
+        - ./src/fcbe:/workspace
+        - fcbe-dev-vsc:/root/.vscode-server
+    stdin_open: true
+    tty: true
+
 volumes:
   container-copier-dev-vsc:
+  fcbe-dev-vsc:

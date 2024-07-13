@@ -1,0 +1,5 @@
+FROM 117503445/dev-golang
+
+RUN pacman -Sy --noconfirm npm
+
+RUN npm install @serverless-devs/s -g
