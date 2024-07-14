@@ -11,12 +11,7 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import Link from '@mui/material/Link';
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
-
-// type TriggerResp = {
-//   image: string
-// }
+import { SnackbarProvider, enqueueSnackbar, VariantType } from 'notistack';
 
 
 const platforms = [
@@ -25,7 +20,6 @@ const platforms = [
 ]
 
 function App() {
-
   const host = "https://containr-copier-kawdvytifk.cn-hangzhou.fcapp.run"
 
   const [image, setImage] = useState("")
@@ -34,31 +28,29 @@ function App() {
   const [btnSyncDisable, setBtnSyncDisable] = useState(false)
 
   const inputRef = useRef<HTMLInputElement>(null);
-  const [openCopySnackbar, setOpenCopySnackbar] = useState(false);
-  const [openTriggerReqSnackbar, setOpenTriggerReqSnackbar] = useState(false);
-  const [openTriggerRespSnackbar, setOpenTriggerRespSnackbar] = useState(false);
 
   const handleCopy = () => {
-    if (inputRef.current) {
+    if (inputRef.current && inputRef.current.value) {
       navigator.clipboard.writeText(inputRef.current.value);
-      setOpenCopySnackbar(true);
+      sendToast('success', `Copied to clipboard: ${inputRef.current.value}`)
     }
   };
 
-  const handleCloseCopySnackbar = () => {
-    setOpenCopySnackbar(false);
-  };
 
-  const handleCloseTriggerReqSnackbar = () => {
-    setOpenTriggerReqSnackbar(false);
-  };
 
-  const handleCloseTriggerRespSnackbar = () => {
-    setOpenTriggerRespSnackbar(false);
+  const sendToast = (variant: VariantType, msg: string) => {
+    enqueueSnackbar(msg, {
+      variant: variant,
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'center',
+      },
+    });
   };
 
   return (
     <>
+      <SnackbarProvider maxSnack={3} />
       <Stack spacing={2} sx={{ width: 300 }}>
 
         <TextField label="Image" variant="outlined" onChange={(e) => setImage(e.target.value)} />
@@ -75,13 +67,13 @@ function App() {
           }}
         />
 
-
-
         <Button variant="contained"
           disabled={btnSyncDisable}
           onClick={async () => {
+
+            sendToast('info', `Trigger Image Sync`)
+
             setBtnSyncDisable(true)
-            setOpenTriggerReqSnackbar(true)
 
             console.info(`Syncing ${image} with ${platform}`)
 
@@ -91,16 +83,22 @@ function App() {
             let response: Response
 
             if (!MOCK) {
-              response = await fetch(`${host}`, {
-                method: 'POST',
-                body: JSON.stringify({
-                  image: image,
-                  platform: platform,
-                }),
-                headers: {
-                  'Content-Type': 'application/json',
-                }
-              })
+              try {
+                response = await fetch(`${host}`, {
+                  method: 'POST',
+                  body: JSON.stringify({
+                    image: image,
+                    platform: platform,
+                  }),
+                  headers: {
+                    'Content-Type': 'application/json',
+                  }
+                })
+              } catch (error) {
+                sendToast('error', `Trigger Image Sync Failed: ${error}`)
+                setBtnSyncDisable(false)
+                return
+              }
             } else {
               await new Promise(resolve => setTimeout(resolve, 1000))
               response = new Response(JSON.stringify({
@@ -114,36 +112,14 @@ function App() {
 
             let newImage: string = resp.image
 
-            setOpenTriggerReqSnackbar(false)
-            setOpenTriggerRespSnackbar(true)
+            // setOpenTriggerReqSnackbar(false)
+            // setOpenTriggerRespSnackbar(true)
+            sendToast('success', `Trigger Image Sync Successfully`)
             setBtnSyncDisable(false)
             if (inputRef.current) {
               inputRef.current.value = newImage
             }
           }}>Sync</Button>
-
-        <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          open={openTriggerReqSnackbar}
-          autoHideDuration={3000}
-          onClose={handleCloseTriggerReqSnackbar}
-        >
-          <MuiAlert onClose={handleCloseTriggerReqSnackbar} severity="info" sx={{ width: '100%' }}>
-            Syncing busybox with linux/amd64
-          </MuiAlert>
-        </Snackbar>
-
-        <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          open={openTriggerRespSnackbar}
-          autoHideDuration={3000}
-          onClose={handleCloseTriggerRespSnackbar}
-        >
-          <MuiAlert onClose={handleCloseTriggerRespSnackbar} severity="success" sx={{ width: '100%' }}>
-            Sync success!
-          </MuiAlert>
-        </Snackbar>
-
         <div>
           <Box display="flex" alignItems="center">
             <TextField inputRef={inputRef} variant="outlined" fullWidth disabled multiline size="small" inputProps={{ style: { fontSize: 14 } }} />
@@ -151,16 +127,6 @@ function App() {
               <FileCopyIcon />
             </IconButton>
           </Box>
-          <Snackbar
-            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-            open={openCopySnackbar}
-            autoHideDuration={3000}
-            onClose={handleCloseCopySnackbar}
-          >
-            <MuiAlert onClose={handleCloseCopySnackbar} severity="success" sx={{ width: '100%' }}>
-              Text copied to clipboard!
-            </MuiAlert>
-          </Snackbar>
         </div>
 
         <Link href="https://github.com/117503445/container-copier/actions/workflows/copy.yml"
