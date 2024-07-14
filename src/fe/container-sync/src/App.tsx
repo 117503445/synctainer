@@ -85,20 +85,28 @@ function App() {
 
             console.info(`Syncing ${image} with ${platform}`)
 
-            let response = await fetch(`${host}`, {
-              method: 'POST',
-              body: JSON.stringify({
-                image: image,
-                platform: platform,
-              }),
-              headers: {
-                'Content-Type': 'application/json',
-              }
-            })
+            const MOCK = false
+            // const MOCK = true // should be false in production
 
-            // await new Promise(resolve => setTimeout(resolve, 1000))
-            // let resp = {
-            // }
+            let response: Response
+
+            if (!MOCK) {
+              response = await fetch(`${host}`, {
+                method: 'POST',
+                body: JSON.stringify({
+                  image: image,
+                  platform: platform,
+                }),
+                headers: {
+                  'Content-Type': 'application/json',
+                }
+              })
+            } else {
+              await new Promise(resolve => setTimeout(resolve, 1000))
+              response = new Response(JSON.stringify({
+                image: "registry.cn-hangzhou.aliyuncs.com/117503445-mirror/sync:docker.io.library.mysql.latest"
+              }))
+            }
 
             console.log(response.status)
 
@@ -138,8 +146,8 @@ function App() {
 
         <div>
           <Box display="flex" alignItems="center">
-            <TextField inputRef={inputRef} variant="outlined" fullWidth disabled />
-            <IconButton onClick={handleCopy} sx={{ height: '100%', marginLeft: '-40px', "&:focus": { outline: 'none' } }}>
+            <TextField inputRef={inputRef} variant="outlined" fullWidth disabled multiline size="small" inputProps={{ style: { fontSize: 14 } }} />
+            <IconButton onClick={handleCopy} sx={{ height: '100%', marginLeft: '-0px', "&:focus": { outline: 'none' } }}>
               <FileCopyIcon />
             </IconButton>
           </Box>
