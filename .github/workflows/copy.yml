@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       image:
-        description: "image name, exp: mysql, ghcr.io/devcontainers/features/anaconda:1, ubuntu:18.04@sha256:98706f0f213dbd440021993a82d2f70451a73698315370ae8615cc468ac06624"
+        description: "image name, exp: mysql, ghcr.io/github/super-linter:v5, ubuntu:18.04@sha256:98706f0f213dbd440021993a82d2f70451a73698315370ae8615cc468ac06624"
         required: true
       platform:
         description: 'container platform, exp: "linux/amd64"'

@@ -53,7 +53,7 @@ function App() {
       <SnackbarProvider maxSnack={3} />
       <Stack spacing={2} sx={{ width: 300 }}>
 
-        <TextField label="Image" variant="outlined" onChange={(e) => setImage(e.target.value)} />
+        <TextField required label="Image" variant="outlined" onChange={(e) => setImage(e.target.value)} />
 
         <Autocomplete
           freeSolo
@@ -70,6 +70,11 @@ function App() {
         <Button variant="contained"
           disabled={btnSyncDisable}
           onClick={async () => {
+
+            if (!image) {
+              sendToast('error', `Image is required`)
+              return
+            }
 
             sendToast('info', `Trigger Image Sync`)
 
@@ -108,7 +113,19 @@ function App() {
 
             console.log(response.status)
 
-            let resp = await response.json()
+            let resp = { image: "" }
+
+            let text = await response.text()
+            console.log(text)
+
+            try {
+              resp = JSON.parse(text)
+            } catch (error) {
+              sendToast('error', `Trigger Image Sync Failed: ${text}`)
+              setBtnSyncDisable(false)
+              return
+            }
+
 
             let newImage: string = resp.image
 

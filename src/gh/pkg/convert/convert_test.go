@@ -41,8 +41,8 @@ func TestConvertToNewImage(t *testing.T) {
 			expected: "registry.cn-hangzhou.aliyuncs.com/117503445-mirror/sync:docker.io.library.mysql.8.0",
 		},
 		{
-			image:    "ghcr.io/devcontainers/features/anaconda:1",
-			expected: "registry.cn-hangzhou.aliyuncs.com/117503445-mirror/sync:ghcr.io.devcontainers.features.anaconda.1",
+			image:    "ghcr.io/github/super-linter:v5",
+			expected: "registry.cn-hangzhou.aliyuncs.com/117503445-mirror/sync:ghcr.io.github.super-linter.v5",
 		},
 		{
 			image:    "ubuntu:18.04@sha256:98706f0f213dbd440021993a82d2f70451a73698315370ae8615cc468ac06624",
