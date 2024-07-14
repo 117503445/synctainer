@@ -50,6 +50,7 @@ function App() {
 
   return (
     <>
+      <h1>synctainer</h1>
       <SnackbarProvider maxSnack={3} />
       <Stack spacing={2} sx={{ width: 300 }}>
 
