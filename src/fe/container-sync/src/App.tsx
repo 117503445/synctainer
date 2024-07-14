@@ -36,8 +36,6 @@ function App() {
     }
   };
 
-
-
   const sendToast = (variant: VariantType, msg: string) => {
     enqueueSnackbar(msg, {
       variant: variant,
@@ -50,7 +48,8 @@ function App() {
 
   return (
     <>
-      <h1>synctainer</h1>
+      <h1><Link href="https://github.com/117503445/synctainer"
+        target="_blank">synctainer</Link></h1>
       <SnackbarProvider maxSnack={3} />
       <Stack spacing={2} sx={{ width: 300 }}>
 
@@ -147,7 +146,7 @@ function App() {
           </Box>
         </div>
 
-        <Link href="https://github.com/117503445/container-copier/actions/workflows/copy.yml"
+        <Link href="https://github.com/117503445/synctainer/actions/workflows/copy.yml"
           target="_blank">See Progress</Link>
       </Stack>
     </>
