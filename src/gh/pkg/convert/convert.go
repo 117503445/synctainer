@@ -12,7 +12,7 @@ const (
 	NEW_SHORTNAME = "117503445-mirror/sync"
 )
 
-func ConvertToNewImage(image string) (string, error) {
+func ConvertToNewImage(image string, platform string) (string, error) {
 	image = strings.TrimSpace(image)
 
 	reference, err := dockerparser.Parse(image)
@@ -20,7 +20,9 @@ func ConvertToNewImage(image string) (string, error) {
 		return "", err
 	}
 
-	newTag := reference.Registry() + "." + reference.Name()
+	newTag := platform + "." +
+		reference.Registry() + "." +
+		reference.Name()
 
 	chars := []string{"/", ":", "@"}
 	for _, char := range chars {

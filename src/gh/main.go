@@ -24,7 +24,7 @@ func main() {
 
 	log.Info().Str("image", image).Str("platform", platform).Msg("load env")
 
-	newImage, err := convert.ConvertToNewImage(image)
+	newImage, err := convert.ConvertToNewImage(image, platform)
 	if err != nil {
 		log.Fatal().Err(err).Msg("ConvertToNewImage")
 	}
