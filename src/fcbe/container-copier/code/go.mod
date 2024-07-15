@@ -3,7 +3,7 @@ module github.com/117503445/synctainer/src/fcbe
 go 1.22.5
 
 require (
-	github.com/117503445/synctainer/src/gh v0.0.0-20240713160248-30cbbc857233
+	github.com/117503445/synctainer/src/gh v0.0.0-20240715141523-3df15aa19817
 	github.com/aliyun/fc-runtime-go-sdk v0.2.7
 	github.com/imroc/req/v3 v3.43.7
 	github.com/stretchr/testify v1.9.0

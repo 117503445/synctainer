@@ -117,7 +117,7 @@ func HandleRequest(event HTTPTriggerEvent) (*HTTPTriggerResponse, error) {
 		return NewHTTPTriggerResponse(http.StatusBadRequest).WithBody(fmt.Sprintf("failed to unmarshal request body, err: %v", err)), nil
 	}
 
-	newImage, err := convert.ConvertToNewImage(triggerReq.Image)
+	newImage, err := convert.ConvertToNewImage(triggerReq.Image, triggerReq.Platform)
 	if err != nil {
 		return NewHTTPTriggerResponse(http.StatusInternalServerError).WithBody(err.Error()), nil
 	}
