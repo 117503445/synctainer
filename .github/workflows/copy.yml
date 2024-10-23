@@ -18,6 +18,15 @@ jobs:
     environment: production
 
     steps:
+      - name: Maximize build space
+        uses: easimon/maximize-build-space@master
+        with:
+          root-reserve-mb: 512
+          swap-size-mb: 1024
+          remove-dotnet: 'true'
+          remove-haskell: 'true'
+          remove-codeql: 'true'
+
       - name: Login to ACR with the AccessKey pair
         uses: aliyun/acr-login@v1
         with:
