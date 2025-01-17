@@ -41,7 +41,7 @@ func main() {
 		if err != nil {
 			log.Fatal().Err(err).Msg("Exec")
 		}
-		digest := result.Stdout
+		digest := strings.TrimSpace(result.Stdout)
 		if !strings.HasPrefix(digest, "sha256:") {
 			log.Fatal().Str("digest", digest).Msg("digest not start with sha256:")
 		}
