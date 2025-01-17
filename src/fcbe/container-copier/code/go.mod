@@ -1,6 +1,6 @@
 module github.com/117503445/synctainer/src/fcbe
 
-go 1.22.5
+go 1.23.4
 
 require (
 	github.com/117503445/synctainer/src/gh v0.0.0-20240715141523-3df15aa19817

@@ -5,12 +5,20 @@ import (
 	"strings"
 
 	dockerparser "github.com/novln/docker-parser"
+	// "github.com/regclient/regclient/types/ref"
 )
 
 const (
 	NEW_REGISTRY  = "registry.cn-hangzhou.aliyuncs.com"
 	NEW_SHORTNAME = "117503445-mirror/sync"
 )
+
+// func ConvertToSrcImage(image string, digest string) (string,error){
+// 	ref ,err:= ref.New(image)
+// 	if err != nil {
+// 		return "", err
+// 	}
+// }
 
 func ConvertToNewImage(image string, platform string) (string, error) {
 	image = strings.TrimSpace(image)
@@ -33,34 +41,3 @@ func ConvertToNewImage(image string, platform string) (string, error) {
 
 	return newImage, nil
 }
-
-// func ConvertToNewImage(image string) (string, error) {
-// 	reference, err := dockerparser.Parse(image)
-// 	if err != nil {
-// 		return "", err
-// 	}
-
-// 	splits := strings.Split(reference.ShortName(), "/")
-// 	if len(splits) <= 1 {
-// 		return "", errors.New("image with len(shortName.split(\"/\")) <= 1")
-// 	}
-
-// 	// if len(splits) != 2 {
-// 	// 	log.Warn().Str("image", image).Msg("image with len(shortName.split(\"/\")) > 2")
-// 	// }
-
-// 	username := splits[0]
-// 	name := strings.Join(splits[1:], "/")
-
-// 	tag := reference.Tag()
-// 	var suffix string
-// 	if strings.HasPrefix(tag, "sha256:") {
-// 		suffix = "@" + tag
-// 	} else {
-// 		suffix = ":" + tag
-// 	}
-
-// 	newImage := NEW_REGISTRY + "/" + NEW_USERNAME + "/" + reference.Registry() + "." + username + "." + name + suffix
-
-// 	return newImage, nil
-// }
