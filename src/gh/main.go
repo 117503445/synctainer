@@ -2,10 +2,12 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"strings"
 
 	"github.com/117503445/goutils"
+	"github.com/117503445/goutils/gexec"
 	"github.com/117503445/synctainer/src/gh/pkg/convert"
 
 	"github.com/regclient/regclient/types/ref"
@@ -56,8 +58,17 @@ func main() {
 
 	log.Info().Str("srcImage", srcImage).Str("newImage", newImage).Msg("ConvertToNewImage")
 
-	_, err = goutils.Exec(fmt.Sprintf("./regctl image copy %v %v", srcImage, newImage), goutils.WithDumpOutput{})
+	_, err = gexec.Run(
+		gexec.Commands([]string{
+			"./regctl", "image", "copy", srcImage, newImage, "--verbosity", "trace",
+		}),
+		&gexec.RunCfg{
+			Writers: []io.Writer{os.Stdout},
+		},
+	)
+
+	// _, err = goutils.Exec(fmt.Sprintf("./regctl image copy %v %v", srcImage, newImage), goutils.WithDumpOutput{})
 	if err != nil {
-		log.Fatal().Err(err).Msg("Exec")
+		log.Fatal().Err(err).Send()
 	}
 }

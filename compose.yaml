@@ -1,35 +1,26 @@
 services:
-  gh-dev:
+  gh:
     build:
       context: ./src/gh
       dockerfile: Dockerfile.dev
     volumes:
         - ./src/gh:/workspace
-        - gh-dev-vsc:/root/.vscode-server
-    stdin_open: true
-    tty: true
-
-  fcbe-dev:
+        - gh-lingma:/root/.lingma
+  fc:
     build:
       context: ./src/fcbe
       dockerfile: Dockerfile.dev
     volumes:
         - ./src/fcbe:/workspace
-        - fcbe-dev-vsc:/root/.vscode-server
-    stdin_open: true
-    tty: true
-
-  fe-dev:
+        - fcbe-lingma:/root/.lingma
+  fe:
     build:
       context: ./src/fe
       dockerfile: Dockerfile.dev
     volumes:
         - ./src/fe:/workspace
-        - fe-dev-vsc:/root/.vscode-server
-    stdin_open: true
-    tty: true
-
+        - fe-lingma:/root/.lingma
 volumes:
-  gh-dev-vsc:
-  fcbe-dev-vsc:
-  fe-dev-vsc:
+  gh-lingma:
+  fcbe-lingma:
+  fe-lingma:
