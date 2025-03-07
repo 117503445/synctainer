@@ -1,4 +1,4 @@
-module github.com/117503445/synctainer/src/fcbe
+module github.com/117503445/synctainer/src/fc
 
 go 1.23.4
 
