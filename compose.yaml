@@ -1,26 +1,9 @@
 services:
-  gh:
+  dev:
     build:
-      context: ./src/gh
-      dockerfile: Dockerfile.dev
+      dockerfile: dev.Dockerfile
     volumes:
-        - ./src/gh:/workspace
-        - gh-lingma:/root/.lingma
-  fc:
-    build:
-      context: ./src/fcbe
-      dockerfile: Dockerfile.dev
-    volumes:
-        - ./src/fcbe:/workspace
-        - fcbe-lingma:/root/.lingma
-  fe:
-    build:
-      context: ./src/fe
-      dockerfile: Dockerfile.dev
-    volumes:
-        - ./src/fe:/workspace
-        - fe-lingma:/root/.lingma
+        - ./:/workspace
+        - lingma:/root/.lingma
 volumes:
-  gh-lingma:
-  fcbe-lingma:
-  fe-lingma:
+  lingma:
