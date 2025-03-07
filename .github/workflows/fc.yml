@@ -25,11 +25,11 @@ jobs:
       # https://github.com/actions/setup-go
       - uses: actions/setup-go@v5
         with:
-          go-version: "1.22"
+          go-version: "1.23"
 
       # https://help.aliyun.com/document_detail/295913.html
       - name: deploy
-        working-directory: src/fc/container-copier
+        working-directory: cmd/fc
         run: |
           s config add --AccountID ${{secrets.AccountID}} --AccessKeyID ${{secrets.FC_ACCESS_KEY_ID}} --AccessKeySecret ${{secrets.FC_ACCESS_KEY_SECRET}} -a default
 

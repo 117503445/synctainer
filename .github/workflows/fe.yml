@@ -26,7 +26,7 @@ jobs:
 
       - name: build dist
         run: |
-          cd ./src/fe/container-sync
+          cd ./fe
           pnpm install
           pnpm build
 
@@ -37,4 +37,4 @@ jobs:
           accessKeySecret: ${{ secrets.ACCESS_KEY_SECRET }}
           bucket: synctainer
           endpoint: https://oss-rg-china-mainland.aliyuncs.com
-          folder: ./src/fe/container-sync/dist
+          folder: ./fe/dist

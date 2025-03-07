@@ -22,7 +22,7 @@ jobs:
 
       - run: go test ./...
 
-      - run: CGO_ENABLED=0 go build -o copier .
+      - run: CGO_ENABLED=0 go build -o ./cmd/gh/copier ./cmd/gh
 
       - name: Generate release tag
         if: "!startsWith(github.ref, 'refs/tags/')"
@@ -36,7 +36,7 @@ jobs:
         if: "!startsWith(github.ref, 'refs/tags/')"
         with:
           files: |
-            ./src/gh/copier
+            ./cmd/gh/copier
           tag_name: ${{ steps.tag.outputs.sha_short }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
