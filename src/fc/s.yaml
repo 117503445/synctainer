@@ -1,0 +1,27 @@
+edition: 3.0.0
+name: synctainer
+access: "default"
+
+resources:
+  synctainer:
+    component: fc3
+    props:
+      region: "cn-hangzhou"
+      functionName: "synctainer"
+      description: "sync container image"
+      runtime: "go1"
+      code: ./app
+      handler: app
+      memorySize: 128
+      timeout: 10
+      triggers:
+        - triggerName: httpTrigger
+          triggerType: http
+          qualifier: LATEST
+          triggerConfig:
+            authType: anonymous
+            disableURLInternet: false
+            # HTTP 触发器支持的访问方法，可选值：GET、POST、PUT、DELETE、HEAD
+            methods:
+              - GET
+              - POST

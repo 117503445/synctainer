@@ -1,0 +1,19 @@
+version: '3'
+
+tasks:
+  default:
+    desc: "The default task" 
+    # deps: [deploy]
+    cmds:
+      - task: fc-deploy
+      
+  fc-build:
+    dir: ./src/fc
+    cmds:
+      - CGO_ENABLED=0 go build -o app main.go
+
+  fc-deploy:
+    dir: ./src/fc
+    deps: [fc-build]
+    cmds:
+      - s deploy -y

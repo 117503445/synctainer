@@ -1,6 +1,6 @@
-on: push
+name: gh
 
-name: release
+on: push
 
 permissions:
   contents: write
