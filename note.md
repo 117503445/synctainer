@@ -1,0 +1,1 @@
+curl -X DELETE http://registry:5000/v2/image-name/manifests/

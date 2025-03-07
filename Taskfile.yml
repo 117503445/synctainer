@@ -5,7 +5,8 @@ tasks:
     desc: "The default task" 
     # deps: [deploy]
     cmds:
-      - task: fc-deploy
+      - clear
+      - task: gh-run
       
   fc-build:
     cmds:
@@ -16,3 +17,7 @@ tasks:
     deps: [fc-build]
     cmds:
       - s deploy -y
+  
+  gh-run:
+    cmds:
+      - IMAGE=registry.cn-hangzhou.aliyuncs.com/117503445-mirror/gatus go run ./cmd/gh

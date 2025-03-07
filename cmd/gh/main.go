@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io"
 	"os"
 	"strings"
@@ -39,11 +38,19 @@ func main() {
 		}
 		log.Debug().Str("srcRef", srcRef.CommonName()).Msg("")
 
-		result, err := goutils.Exec(fmt.Sprintf("regctl image digest %v --platform %v", image, platform))
+		output, err := gexec.Run(
+			gexec.Commands([]string{
+				"regctl", "image", "digest", image, "--platform", platform,
+			}),
+			&gexec.RunCfg{
+				Writers: []io.Writer{os.Stdout},
+			},
+		)
 		if err != nil {
 			log.Fatal().Err(err).Msg("Exec")
 		}
-		digest := strings.TrimSpace(result.Stdout)
+
+		digest := strings.TrimSpace(output)
 		if !strings.HasPrefix(digest, "sha256:") {
 			log.Fatal().Str("digest", digest).Msg("digest not start with sha256:")
 		}
