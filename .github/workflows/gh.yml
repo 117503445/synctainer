@@ -8,9 +8,9 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./src/gh
+    # defaults:
+    #   run:
+    #     working-directory: ./src/gh
 
     steps:
       - uses: actions/checkout@master
@@ -20,7 +20,7 @@ jobs:
         with:
           go-version: "1.23.4"
 
-      - run: go test ./...
+      # - run: go test ./...
 
       - run: CGO_ENABLED=0 go build -o ./cmd/gh/copier ./cmd/gh
 

@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  update-befc-version:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       # https://github.com/actions/checkout
@@ -26,6 +26,8 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: "1.23"
+
+      - run: CGO_ENABLED=0 go build -o ./cmd/fc/app ./cmd/fc
 
       # https://help.aliyun.com/document_detail/295913.html
       - name: deploy
