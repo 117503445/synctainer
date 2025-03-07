@@ -39,7 +39,7 @@ func main() {
 		}
 		log.Debug().Str("srcRef", srcRef.CommonName()).Msg("")
 
-		result, err := goutils.Exec(fmt.Sprintf("./regctl image digest %v --platform %v", image, platform))
+		result, err := goutils.Exec(fmt.Sprintf("regctl image digest %v --platform %v", image, platform))
 		if err != nil {
 			log.Fatal().Err(err).Msg("Exec")
 		}
@@ -60,14 +60,14 @@ func main() {
 
 	_, err = gexec.Run(
 		gexec.Commands([]string{
-			"./regctl", "image", "copy", srcImage, newImage, "--verbosity", "trace",
+			"regctl", "image", "copy", srcImage, newImage, "--verbosity", "trace",
 		}),
 		&gexec.RunCfg{
 			Writers: []io.Writer{os.Stdout},
 		},
 	)
 
-	// _, err = goutils.Exec(fmt.Sprintf("./regctl image copy %v %v", srcImage, newImage), goutils.WithDumpOutput{})
+	// _, err = goutils.Exec(fmt.Sprintf("regctl image copy %v %v", srcImage, newImage), goutils.WithDumpOutput{})
 	if err != nil {
 		log.Fatal().Err(err).Send()
 	}

@@ -45,8 +45,8 @@ jobs:
 
       - name: Copy image
         run: |
-          curl -L https://github.com/regclient/regclient/releases/latest/download/regctl-linux-amd64 -o regctl && chmod +x regctl 
-          wget https://github.com/117503445/synctainer/releases/latest/download/copier && chmod +x copier && ./copier
+          curl -L https://github.com/regclient/regclient/releases/latest/download/regctl-linux-amd64 -o /usr/bin/regctl && chmod +x /usr/bin/regctl
+          curl -L https://github.com/117503445/synctainer/releases/latest/download/copier -o ./copier && chmod +x copier && ./copier
         env:
           IMAGE: "${{ github.event.inputs.image }}"
           PLATFORM: "${{ github.event.inputs.platform }}"

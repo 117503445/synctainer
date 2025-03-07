@@ -4,6 +4,14 @@ services:
       dockerfile: dev.Dockerfile
     volumes:
         - ./:/workspace
+        - ./scripts/entrypoint.sh:/entrypoint
         - lingma:/root/.lingma
+    privileged: true
+  registry:
+    image: registry:2
+    # ports:
+    #   - "5000:5000"
+    environment:
+      REGISTRY_STORAGE_DELETE_ENABLED: "true"
 volumes:
   lingma:
