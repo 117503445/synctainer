@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/117503445/synctainer/src/fc/pkg/gh"
-	"github.com/117503445/synctainer/src/gh/pkg/convert"
+	"github.com/117503445/synctainer/pkg/gh"
+	"github.com/117503445/synctainer/pkg/convert"
 
 	"github.com/aliyun/fc-runtime-go-sdk/fc"
 )

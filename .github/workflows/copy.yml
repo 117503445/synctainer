@@ -18,14 +18,14 @@ jobs:
     environment: production
 
     steps:
-      - name: Maximize build space
-        uses: easimon/maximize-build-space@master
-        with:
-          root-reserve-mb: 20000
-          swap-size-mb: 1024
-          remove-dotnet: 'true'
-          remove-haskell: 'true'
-          remove-codeql: 'true'
+      # - name: Maximize build space
+      #   uses: easimon/maximize-build-space@master
+      #   with:
+      #     root-reserve-mb: 20000
+      #     swap-size-mb: 1024
+      #     remove-dotnet: 'true'
+      #     remove-haskell: 'true'
+      #     remove-codeql: 'true'
 
         # for debug only
       # - name: Setup upterm session

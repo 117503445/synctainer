@@ -1,12 +1,14 @@
-module github.com/117503445/synctainer/src/fc
+module github.com/117503445/synctainer
 
 go 1.23.4
 
 require (
 	github.com/117503445/goutils v0.0.0-20250306170112-72b42153d0a7
-	github.com/117503445/synctainer/src/gh v0.0.0-20250117192803-969948b096b4
 	github.com/aliyun/fc-runtime-go-sdk v0.2.11
 	github.com/imroc/req/v3 v3.50.0
+	github.com/novln/docker-parser v1.0.0
+	github.com/regclient/regclient v0.8.2
+	github.com/rs/zerolog v1.33.0
 	github.com/stretchr/testify v1.10.0
 )
 
@@ -20,15 +22,13 @@ require (
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/klauspost/compress v1.18.0 // indirect
-	github.com/mattn/go-colorable v0.1.13 // indirect
+	github.com/mattn/go-colorable v0.1.14 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
-	github.com/novln/docker-parser v1.0.0 // indirect
 	github.com/onsi/ginkgo/v2 v2.23.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/quic-go/qpack v0.5.1 // indirect
 	github.com/quic-go/quic-go v0.50.0 // indirect
 	github.com/refraction-networking/utls v1.6.7 // indirect
-	github.com/rs/zerolog v1.33.0 // indirect
 	go.uber.org/mock v0.5.0 // indirect
 	golang.org/x/crypto v0.36.0 // indirect
 	golang.org/x/exp v0.0.0-20250305212735-054e65f0b394 // indirect

@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/117503445/synctainer/src/fc/pkg/gh"
+	"github.com/117503445/synctainer/pkg/gh"
 )
 
 func TestTriggerGithubAction(t *testing.T) {

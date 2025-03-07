@@ -8,7 +8,7 @@ import (
 
 	"github.com/117503445/goutils"
 	"github.com/117503445/goutils/gexec"
-	"github.com/117503445/synctainer/src/gh/pkg/convert"
+	"github.com/117503445/synctainer/pkg/convert"
 
 	"github.com/regclient/regclient/types/ref"
 	"github.com/rs/zerolog/log"

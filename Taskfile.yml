@@ -8,12 +8,11 @@ tasks:
       - task: fc-deploy
       
   fc-build:
-    dir: ./src/fc
     cmds:
-      - CGO_ENABLED=0 go build -o app main.go
+      - CGO_ENABLED=0 go build -o ./cmd/fc/app ./cmd/fc
 
   fc-deploy:
-    dir: ./src/fc
+    dir: ./cmd/fc
     deps: [fc-build]
     cmds:
       - s deploy -y
