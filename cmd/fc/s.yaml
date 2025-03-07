@@ -14,6 +14,8 @@ resources:
       handler: app
       memorySize: 128
       timeout: 10
+      customRuntimeConfig:
+        port: 8080
       triggers:
         - triggerName: httpTrigger
           triggerType: http

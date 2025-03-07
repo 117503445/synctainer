@@ -21,3 +21,12 @@ tasks:
   gh-run:
     cmds:
       - IMAGE=registry.cn-hangzhou.aliyuncs.com/117503445-mirror/gatus go run ./cmd/gh
+  
+  fe-run:
+    dir: ./fe
+    cmds:
+      - pnpm dev
+  
+  proto:
+    cmds:
+      - ./scripts/proto.sh

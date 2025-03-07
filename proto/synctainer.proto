@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package synctainer;
+option go_package = "pkg/rpc";
+
+// import "google/protobuf/empty.proto";
+// import "google/protobuf/any.proto";
+
+service Fc {
+    // called by fe
+    rpc PostTask(ReqPostTask) returns (RespPostTask);
+    rpc GetTask(ReqGetTask) returns (RespGetTask);
+    // called by gh
+    rpc PutTask(ReqPutTask) returns (RespPutTask);
+}
+
+message ReqPostTask{
+  string image = 1;
+  string platform = 2;
+  string registry = 3;
+  string username = 4;
+  string password = 5;
+}
+message RespPostTask{
+    string id = 1; // run id for the sync task
+}
+
+message ReqGetTask{
+    string id = 1;
+}
+message RespGetTask{
+    string digest = 1;
+    string github_action_url = 2;
+}
+
+message ReqPutTask{
+    string id = 1;
+    string digest = 2;
+    string github_action_url = 3;
+}
+message RespPutTask{
+}
