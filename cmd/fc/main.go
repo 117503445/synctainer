@@ -34,7 +34,7 @@ func (s *server) PostTask(ctx context.Context, req *rpc.ReqPostTask) (*rpc.RespP
 
 	id := goutils.UUID7()
 
-	err := gh.TriggerGithubAction(id, req.Image, req.Platform, req.Registry, req.Username, req.Password, s.githubToken)
+	err := gh.TriggerGithubAction(id, req.Image, req.Platform, req.Registry, req.Username, req.Password, s.githubToken, "TODO")
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +48,7 @@ func main() {
 	// goutils.InitZeroLog(goutils.WithNoColor{})
 	goutils.InitZeroLog()
 
-	cfg.CfgLoad()
+	cfg.CfgLoad("fc")
 
 	log.Info().Msg("Starting server...")
 	s := newServer(cfg.Cfg.GithubToken)

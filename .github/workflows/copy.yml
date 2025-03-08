@@ -35,34 +35,19 @@ jobs:
     environment: production
 
     steps:
-      # - name: Maximize build space
-      #   uses: easimon/maximize-build-space@master
+      # for debug only
+      # - name: Setup upterm session
+      #   uses: lhotari/action-upterm@v1
       #   with:
-      #     root-reserve-mb: 20000
-      #     swap-size-mb: 1024
-      #     remove-dotnet: 'true'
-      #     remove-haskell: 'true'
-      #     remove-codeql: 'true'
-
-        # for debug only
-      - name: Setup upterm session
-        uses: lhotari/action-upterm@v1
-        with:
-          ## limits ssh access and adds the ssh public key for the user which triggered the workflow
-          limit-access-to-actor: true
-          ## limits ssh access and adds the ssh public keys of the listed GitHub users
-          limit-access-to-users: 117503445
-
-      # - name: Login to ACR with the AccessKey pair
-      #   uses: aliyun/acr-login@v1
-      #   with:
-      #     login-server: https://registry.cn-hangzhou.aliyuncs.com
-      #     username: "${{ secrets.REGISTRY_USERNAME }}"
-      #     password: "${{ secrets.REGISTRY_PASSWORD }}"
+      #     ## limits ssh access and adds the ssh public key for the user which triggered the workflow
+      #     limit-access-to-actor: true
+      #     ## limits ssh access and adds the ssh public keys of the listed GitHub users
+      #     limit-access-to-users: 117503445
 
       - name: Copy image
         run: |
-          curl -L https://github.com/regclient/regclient/releases/latest/download/regctl-linux-amd64 -o /usr/bin/regctl && chmod +x /usr/bin/regctl
+          mkdir -p /home/runner/.local/bin
+          curl -L https://github.com/regclient/regclient/releases/latest/download/regctl-linux-amd64 -o /home/runner/.local/bin/regctl && chmod +x /home/runner/.local/bin/regctl
           curl -L https://github.com/117503445/synctainer/releases/latest/download/copier -o ./copier && chmod +x copier && ./copier
         env:
           IMAGE: "${{ github.event.inputs.image }}"

@@ -7,6 +7,7 @@ import (
 
 	"github.com/117503445/goutils"
 	"github.com/117503445/goutils/gexec"
+	"github.com/117503445/synctainer/pkg/cfg"
 	"github.com/117503445/synctainer/pkg/convert"
 
 	"github.com/regclient/regclient/types/ref"
@@ -16,23 +17,15 @@ import (
 func main() {
 	goutils.InitZeroLog()
 
-	image := os.Getenv("IMAGE")
-	if image == "" {
-		log.Fatal().Msg("Image is required")
-	}
+	cfg.CfgLoad("gh")
 
-	platform := os.Getenv("PLATFORM")
-	if platform == "" {
-		platform = "linux/amd64"
-	}
-
-	log.Info().Str("image", image).Str("platform", platform).Msg("load env")
+	c := cfg.Cfg
 
 	srcImage := ""
-	if strings.Contains(image, "sha256") {
-		srcImage = image
+	if strings.Contains(c.Image, "sha256") {
+		srcImage = c.Image
 	} else {
-		srcRef, err := ref.New(image)
+		srcRef, err := ref.New(c.Image)
 		if err != nil {
 			log.Fatal().Err(err).Msg("ref.New")
 		}
@@ -40,7 +33,7 @@ func main() {
 
 		output, err := gexec.Run(
 			gexec.Commands([]string{
-				"regctl", "image", "digest", image, "--platform", platform,
+				"regctl", "image", "digest", c.Image, "--platform", c.Platform,
 			}),
 			&gexec.RunCfg{
 				Writers: []io.Writer{os.Stdout},
@@ -58,12 +51,29 @@ func main() {
 		srcImage = srcRef.CommonName()
 	}
 
-	newImage, err := convert.ConvertToNewImage(image, platform)
+	newImage, err := convert.ConvertToNewImage(c.Image, c.Platform)
 	if err != nil {
 		log.Fatal().Err(err).Msg("ConvertToNewImage")
 	}
-
 	log.Info().Str("srcImage", srcImage).Str("newImage", newImage).Msg("ConvertToNewImage")
+
+	cmds := []string{
+		"regctl", "registry", "login", c.Registry, "--user", c.Username, "--pass", c.Password,
+	}
+	cmdStr := strings.Join(cmds[:len(cmds)-1], " ")+" ***"
+
+	log.Info().Str("cmd", cmdStr).Msg("Executing")
+	_, err = gexec.Run(
+		gexec.Commands(cmds),
+		&gexec.RunCfg{
+			DisableLog: true,
+			Writers:    []io.Writer{os.Stdout},
+		},
+	)
+	if err != nil {
+		log.Fatal().Err(err).Send()
+	}
+	log.Info().Str("cmd", cmdStr).Msg("Executed")
 
 	_, err = gexec.Run(
 		gexec.Commands([]string{
@@ -73,8 +83,6 @@ func main() {
 			Writers: []io.Writer{os.Stdout},
 		},
 	)
-
-	// _, err = goutils.Exec(fmt.Sprintf("regctl image copy %v %v", srcImage, newImage), goutils.WithDumpOutput{})
 	if err != nil {
 		log.Fatal().Err(err).Send()
 	}

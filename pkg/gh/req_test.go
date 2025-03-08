@@ -11,7 +11,7 @@ import (
 func TestTriggerGithubAction(t *testing.T) {
 	ast := assert.New(t)
 
-	err := gh.TriggerGithubAction("", "", "", "", "mysql", "linux/amd64", "TODO")
+	err := gh.TriggerGithubAction("", "", "", "", "mysql", "linux/amd64", "TODO", "")
 
 	ast.NoError(err)
 }
