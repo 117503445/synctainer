@@ -1,152 +1,54 @@
 package main
 
 import (
-	"encoding/base64"
-	"encoding/json"
-	"fmt"
+	"context"
 	"net/http"
 
+	"github.com/117503445/goutils"
 	"github.com/117503445/synctainer/pkg/gh"
-	"github.com/117503445/synctainer/pkg/convert"
-
-	"github.com/aliyun/fc-runtime-go-sdk/fc"
+	"github.com/117503445/synctainer/pkg/rpc"
+	"github.com/rs/cors"
+	"github.com/rs/zerolog/log"
 )
 
-// HTTPTriggerEvent HTTP Trigger Request Event
-type HTTPTriggerEvent struct {
-	Version         *string           `json:"version"`
-	RawPath         *string           `json:"rawPath"`
-	Headers         map[string]string `json:"headers"`
-	QueryParameters map[string]string `json:"queryParameters"`
-	Body            *string           `json:"body"`
-	IsBase64Encoded *bool             `json:"isBase64Encoded"`
-	RequestContext  *struct {
-		AccountId    string `json:"accountId"`
-		DomainName   string `json:"domainName"`
-		DomainPrefix string `json:"domainPrefix"`
-		RequestId    string `json:"requestId"`
-		Time         string `json:"time"`
-		TimeEpoch    string `json:"timeEpoch"`
-		Http         struct {
-			Method    string `json:"method"`
-			Path      string `json:"path"`
-			Protocol  string `json:"protocol"`
-			SourceIp  string `json:"sourceIp"`
-			UserAgent string `json:"userAgent"`
-		} `json:"http"`
-	} `json:"requestContext"`
+type server struct {
+	rpc.Fc
 }
 
-func (h HTTPTriggerEvent) String() string {
-	jsonBytes, err := json.MarshalIndent(h, "", "  ")
+func (s *server) PostTask(ctx context.Context, req *rpc.ReqPostTask) (*rpc.RespPostTask, error) {
+	// newImage, err := convert.ConvertToNewImage(req.Image, req.Platform)
+	// if err != nil {
+	// 	return nil, err
+	// }
+
+	err := gh.TriggerGithubAction(req.Image, req.Platform)
 	if err != nil {
-		return ""
-	}
-	return string(jsonBytes)
-}
-
-// HTTPTriggerResponse HTTP Trigger Response struct
-type HTTPTriggerResponse struct {
-	StatusCode      int               `json:"statusCode"`
-	Headers         map[string]string `json:"headers,omitempty"`
-	IsBase64Encoded bool              `json:"isBase64Encoded,omitempty"`
-	Body            string            `json:"body"`
-}
-
-func NewHTTPTriggerResponse(statusCode int) *HTTPTriggerResponse {
-	return &HTTPTriggerResponse{StatusCode: statusCode}
-}
-
-func (h *HTTPTriggerResponse) String() string {
-	jsonBytes, err := json.MarshalIndent(h, "", "  ")
-	if err != nil {
-		return ""
-	}
-	return string(jsonBytes)
-}
-
-func (h *HTTPTriggerResponse) WithStatusCode(statusCode int) *HTTPTriggerResponse {
-	h.StatusCode = statusCode
-	return h
-}
-
-func (h *HTTPTriggerResponse) WithHeaders(headers map[string]string) *HTTPTriggerResponse {
-	h.Headers = headers
-	return h
-}
-
-func (h *HTTPTriggerResponse) WithIsBase64Encoded(isBase64Encoded bool) *HTTPTriggerResponse {
-	h.IsBase64Encoded = isBase64Encoded
-	return h
-}
-
-func (h *HTTPTriggerResponse) WithBody(body string) *HTTPTriggerResponse {
-	h.Body = body
-	return h
-}
-
-type TriggerRequest struct {
-	Image    string `json:"image"`
-	Platform string `json:"platform"`
-}
-
-type TriggerResponse struct {
-	Image string `json:"image"`
-}
-
-func HandleRequest(event HTTPTriggerEvent) (*HTTPTriggerResponse, error) {
-	fmt.Printf("event: %v\n", event)
-	if event.Body == nil {
-		return NewHTTPTriggerResponse(http.StatusBadRequest).
-			WithBody(fmt.Sprintf("the request did not come from an HTTP Trigger, event: %v", event)), nil
+		return nil, err
 	}
 
-	reqBody := *event.Body
-	if event.IsBase64Encoded != nil && *event.IsBase64Encoded {
-		decodedByte, err := base64.StdEncoding.DecodeString(*event.Body)
-		if err != nil {
-			return NewHTTPTriggerResponse(http.StatusBadRequest).
-				WithBody(fmt.Sprintf("HTTP Trigger body is not base64 encoded, err: %v", err)), nil
-		}
-		reqBody = string(decodedByte)
-	}
+	// TODO: uuid7
+	id := goutils.UUID4()
 
-	var triggerReq TriggerRequest
-	err := json.Unmarshal([]byte(reqBody), &triggerReq)
-	if err != nil {
-		return NewHTTPTriggerResponse(http.StatusBadRequest).WithBody(fmt.Sprintf("failed to unmarshal request body, err: %v", err)), nil
-	}
-
-	newImage, err := convert.ConvertToNewImage(triggerReq.Image, triggerReq.Platform)
-	if err != nil {
-		return NewHTTPTriggerResponse(http.StatusInternalServerError).WithBody(err.Error()), nil
-	}
-
-	err = gh.TriggerGithubAction(triggerReq.Image, triggerReq.Platform)
-	if err != nil {
-		return NewHTTPTriggerResponse(http.StatusInternalServerError).WithBody(err.Error()), nil
-	}
-
-	resp := TriggerResponse{
-		Image: newImage,
-	}
-
-	respBytes, err := json.Marshal(resp)
-	if err != nil {
-		return NewHTTPTriggerResponse(http.StatusInternalServerError).WithBody(err.Error()), nil
-	}
-
-	return NewHTTPTriggerResponse(http.StatusOK).WithBody(string(respBytes)), nil
+	return &rpc.RespPostTask{
+		Id: id,
+	}, nil
 }
-
-/*
-// GetRawRequestEvent: obtain the raw request event
-func GetRawRequestEvent(event []byte) (*HTTPTriggerResponse, error) {
-	fmt.Printf("raw event: %s\n", string(event))
-	return NewHTTPTriggerResponse(http.StatusOK).WithBody(string(event)), nil
-}
-*/
 
 func main() {
-	fc.Start(HandleRequest)
+	// goutils.InitZeroLog(goutils.WithNoColor{})
+	goutils.InitZeroLog()
+	log.Info().Msg("Starting server...")
+	s := &server{}
+	var handler http.Handler
+
+	handler = rpc.NewFcServer(s)
+	corsWrapper := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{"POST"},
+		AllowedHeaders: []string{"Content-Type"},
+	})
+	handler = corsWrapper.Handler(handler)
+
+	http.Handle("/", handler)
+	http.ListenAndServe(":8080", nil)
 }

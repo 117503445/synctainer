@@ -4,13 +4,13 @@ go 1.23.4
 
 require (
 	github.com/117503445/goutils v0.0.0-20250306170112-72b42153d0a7
-	github.com/aliyun/fc-runtime-go-sdk v0.2.11
 	github.com/imroc/req/v3 v3.50.0
 	github.com/novln/docker-parser v1.0.0
 	github.com/regclient/regclient v0.8.2
+	github.com/rs/cors v1.11.1
 	github.com/rs/zerolog v1.33.0
 	github.com/stretchr/testify v1.10.0
-	google.golang.org/grpc v1.71.0
+	github.com/twitchtv/twirp v8.1.3+incompatible
 	google.golang.org/protobuf v1.36.4
 )
 
@@ -40,6 +40,5 @@ require (
 	golang.org/x/sys v0.31.0 // indirect
 	golang.org/x/text v0.23.0 // indirect
 	golang.org/x/tools v0.31.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20250115164207-1a7da9e5054f // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

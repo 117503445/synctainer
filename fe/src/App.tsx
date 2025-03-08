@@ -12,6 +12,8 @@ import IconButton from '@mui/material/IconButton';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import Link from '@mui/material/Link';
 import { SnackbarProvider, enqueueSnackbar, VariantType } from 'notistack';
+import { client } from "twirpscript";
+import { PostTask, ReqPostTask, RespPostTask } from "./rpc/synctainer.pb";
 
 
 const platforms = [
@@ -20,7 +22,8 @@ const platforms = [
 ]
 
 function App() {
-  const host = "https://containr-copier-kawdvytifk.cn-hangzhou.fcapp.run"
+  const host = "https://synctainer-api.117503445.top"
+  client.baseURL = host;
 
   const [image, setImage] = useState("")
   const [platform, setPlatform] = useState("linux/amd64")
@@ -86,18 +89,26 @@ function App() {
             // const MOCK = true // should be false in production
 
             let response: Response
+            let respPostTask: RespPostTask
 
             if (!MOCK) {
               try {
-                response = await fetch(`${host}`, {
-                  method: 'POST',
-                  body: JSON.stringify({
-                    image: image,
-                    platform: platform,
-                  }),
-                  headers: {
-                    'Content-Type': 'application/json',
-                  }
+                // response = await fetch(`${host}`, {
+                //   method: 'POST',
+                //   body: JSON.stringify({
+                //     image: image,
+                //     platform: platform,
+                //   }),
+                //   headers: {
+                //     'Content-Type': 'application/json',
+                //   }
+                // })
+                respPostTask = await PostTask({
+                  image: image,
+                  platform: platform,
+                  registry: "",
+                  username: "",
+                  password: "",
                 })
               } catch (error) {
                 sendToast('error', `Trigger Image Sync Failed: ${error}`)
@@ -111,23 +122,23 @@ function App() {
               }))
             }
 
-            console.log(response.status)
 
-            let resp = { image: "" }
+            // let resp = { image: "" }
 
-            let text = await response.text()
-            console.log(text)
+            // let text = await response.text()
+            // console.log(text)
 
-            try {
-              resp = JSON.parse(text)
-            } catch (error) {
-              sendToast('error', `Trigger Image Sync Failed: ${text}`)
-              setBtnSyncDisable(false)
-              return
-            }
+            // try {
+            //   resp = JSON.parse(text)
+            // } catch (error) {
+            //   sendToast('error', `Trigger Image Sync Failed: ${text}`)
+            //   setBtnSyncDisable(false)
+            //   return
+            // }
 
 
-            let newImage: string = resp.image
+            // let newImage: string = resp.image
+            let newImage: string = image // TODO
 
             // setOpenTriggerReqSnackbar(false)
             // setOpenTriggerRespSnackbar(true)

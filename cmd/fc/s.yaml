@@ -9,13 +9,15 @@ resources:
       region: "cn-hangzhou"
       functionName: "synctainer"
       description: "sync container image"
-      runtime: "go1"
+      runtime: "custom.debian10"
       code: ./app
       handler: app
       memorySize: 128
       timeout: 10
       customRuntimeConfig:
         port: 8080
+        command:
+          - /code/app
       triggers:
         - triggerName: httpTrigger
           triggerType: http
@@ -27,3 +29,4 @@ resources:
             methods:
               - GET
               - POST
+            

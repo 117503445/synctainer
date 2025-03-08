@@ -3,3 +3,4 @@ app
 .pnpm-store
 pkg/rpc
 fe/src/rpc/*.ts
+node_modules
