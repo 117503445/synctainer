@@ -3,7 +3,7 @@ module github.com/117503445/synctainer
 go 1.23.4
 
 require (
-	github.com/117503445/goutils v0.0.0-20250306170112-72b42153d0a7
+	github.com/117503445/goutils v0.0.0-20250307183532-33774ca8b459
 	github.com/alecthomas/kong v1.8.1
 	github.com/alecthomas/kong-toml v0.2.0
 	github.com/imroc/req/v3 v3.50.0

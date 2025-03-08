@@ -15,3 +15,5 @@ RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest && go install
 RUN pacman -Sy --noconfirm protobuf
 
 RUN yarn global add twirpscript
+
+RUN go install github.com/aliyun/ossutil@master

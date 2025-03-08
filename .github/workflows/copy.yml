@@ -11,6 +11,23 @@ on:
         description: 'container platform, exp: "linux/amd64"'
         required: false
         default: "linux/amd64"
+      taskId:
+        description: 'task id'
+        required: false
+        default: ""
+      fcCallback:
+        description: 'fc callback'
+        required: false
+        default: ""
+      registry:
+        description: 'target registry, exp: registry.cn-hangzhou.aliyuncs.com'
+        required: true
+      username:
+        description: 'target registry username'
+        required: false
+      password:
+        description: 'target registry password'
+        required: false
 
 jobs:
   build:
@@ -28,20 +45,20 @@ jobs:
       #     remove-codeql: 'true'
 
         # for debug only
-      # - name: Setup upterm session
-      #   uses: lhotari/action-upterm@v1
-      #   with:
-      #     ## limits ssh access and adds the ssh public key for the user which triggered the workflow
-      #     limit-access-to-actor: true
-      #     ## limits ssh access and adds the ssh public keys of the listed GitHub users
-      #     limit-access-to-users: 117503445
-
-      - name: Login to ACR with the AccessKey pair
-        uses: aliyun/acr-login@v1
+      - name: Setup upterm session
+        uses: lhotari/action-upterm@v1
         with:
-          login-server: https://registry.cn-hangzhou.aliyuncs.com
-          username: "${{ secrets.REGISTRY_USERNAME }}"
-          password: "${{ secrets.REGISTRY_PASSWORD }}"
+          ## limits ssh access and adds the ssh public key for the user which triggered the workflow
+          limit-access-to-actor: true
+          ## limits ssh access and adds the ssh public keys of the listed GitHub users
+          limit-access-to-users: 117503445
+
+      # - name: Login to ACR with the AccessKey pair
+      #   uses: aliyun/acr-login@v1
+      #   with:
+      #     login-server: https://registry.cn-hangzhou.aliyuncs.com
+      #     username: "${{ secrets.REGISTRY_USERNAME }}"
+      #     password: "${{ secrets.REGISTRY_PASSWORD }}"
 
       - name: Copy image
         run: |

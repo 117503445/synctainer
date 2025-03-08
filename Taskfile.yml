@@ -26,7 +26,17 @@ tasks:
     dir: ./fe
     cmds:
       - pnpm dev
+
+  fe-build:
+    dir: ./fe
+    cmds:
+      - pnpm build
   
   proto:
     cmds:
       - ./scripts/proto.sh
+  
+  fe-deploy:
+    deps: [fe-build]
+    cmds:
+      - ossutil cp -rf ./fe/dist oss://synctainer

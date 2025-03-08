@@ -32,13 +32,12 @@ func (s *server) PostTask(ctx context.Context, req *rpc.ReqPostTask) (*rpc.RespP
 	// 	return nil, err
 	// }
 
-	err := gh.TriggerGithubAction(req.Image, req.Platform, s.githubToken)
+	id := goutils.UUID7()
+
+	err := gh.TriggerGithubAction(id, req.Image, req.Platform, req.Registry, req.Username, req.Password, s.githubToken)
 	if err != nil {
 		return nil, err
 	}
-
-	// TODO: uuid7
-	id := goutils.UUID4()
 
 	return &rpc.RespPostTask{
 		Id: id,

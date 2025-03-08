@@ -20,7 +20,7 @@ resources:
           - /code/app
       environmentVariables:
         SYNCTAINER_CONFIG: ${file('../../config.toml')}
-        VER: "1408"
+        # VER: "1408"
       logConfig:
         enableRequestMetrics: true
         enableInstanceMetrics: true

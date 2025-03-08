@@ -127,7 +127,7 @@ function App() {
             const MOCK = false
             // const MOCK = true // should be false in production
 
-            let response: Response
+            // let response: Response
             let respPostTask: RespPostTask
 
             if (!MOCK) {
@@ -149,6 +149,7 @@ function App() {
                   username: username,
                   password: password,
                 })
+                console.log(respPostTask)
               } catch (error) {
                 if (error instanceof TwirpError) {
                   sendToast('error', `Trigger Image Sync Failed: ${error.msg}`)
@@ -159,10 +160,10 @@ function App() {
                 return
               }
             } else {
-              await new Promise(resolve => setTimeout(resolve, 1000))
-              response = new Response(JSON.stringify({
-                image: "registry.cn-hangzhou.aliyuncs.com/117503445-mirror/sync:docker.io.library.mysql.latest"
-              }))
+              // await new Promise(resolve => setTimeout(resolve, 1000))
+              // response = new Response(JSON.stringify({
+              //   image: "registry.cn-hangzhou.aliyuncs.com/117503445-mirror/sync:docker.io.library.mysql.latest"
+              // }))
             }
 
 

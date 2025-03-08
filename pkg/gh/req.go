@@ -6,7 +6,7 @@ import (
 	"github.com/imroc/req/v3"
 )
 
-func TriggerGithubAction(image string, platform string, githubToken string) error {
+func TriggerGithubAction(taskId string, image string, platform string, registry string, username string, password string, githubToken string, fcCallback string) error {
 	if platform == "" {
 		platform = "linux/amd64"
 	}
@@ -17,8 +17,13 @@ func TriggerGithubAction(image string, platform string, githubToken string) erro
 		req.SetBodyJsonMarshal(map[string]any{
 			"ref": "master",
 			"inputs": map[string]string{
-				"image":    image,
-				"platform": platform,
+				"taskId":     taskId,
+				"fcCallback": fcCallback,
+				"image":      image,
+				"platform":   platform,
+				"registry":   registry,
+				"username":   username,
+				"password":   password,
 			},
 		}).SetHeader("Accept", "application/vnd.github+json").SetHeader("Authorization", "Bearer "+githubToken).SetHeader("X-GitHub-Api-Version", "2022-11-28").
 			Post("https://api.github.com/repos/117503445/synctainer/actions/workflows/copy.yml/dispatches")
