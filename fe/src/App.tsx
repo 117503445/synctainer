@@ -12,7 +12,7 @@ import IconButton from '@mui/material/IconButton';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import Link from '@mui/material/Link';
 import { SnackbarProvider, enqueueSnackbar, VariantType } from 'notistack';
-import { client } from "twirpscript";
+import { client, TwirpError } from "twirpscript";
 import { PostTask, ReqPostTask, RespPostTask } from "./rpc/synctainer.pb";
 
 
@@ -111,7 +111,11 @@ function App() {
                   password: "",
                 })
               } catch (error) {
-                sendToast('error', `Trigger Image Sync Failed: ${error}`)
+                if (error instanceof TwirpError){
+                  sendToast('error', `Trigger Image Sync Failed: ${error.msg}`)
+                }else{
+                  sendToast('error', `Trigger Image Sync Failed: ${error}`)
+                }
                 setBtnSyncDisable(false)
                 return
               }

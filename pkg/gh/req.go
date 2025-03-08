@@ -2,16 +2,14 @@ package gh
 
 import (
 	"errors"
-	"os"
 
 	"github.com/imroc/req/v3"
 )
 
-func TriggerGithubAction(image string, platform string) error {
+func TriggerGithubAction(image string, platform string, githubToken string) error {
 	if platform == "" {
 		platform = "linux/amd64"
 	}
-	github_token := os.Getenv("GITHUB_TOKEN")
 
 	req.DevMode()
 
@@ -22,7 +20,7 @@ func TriggerGithubAction(image string, platform string) error {
 				"image":    image,
 				"platform": platform,
 			},
-		}).SetHeader("Accept", "application/vnd.github+json").SetHeader("Authorization", "Bearer "+github_token).SetHeader("X-GitHub-Api-Version", "2022-11-28").
+		}).SetHeader("Accept", "application/vnd.github+json").SetHeader("Authorization", "Bearer "+githubToken).SetHeader("X-GitHub-Api-Version", "2022-11-28").
 			Post("https://api.github.com/repos/117503445/synctainer/actions/workflows/copy.yml/dispatches")
 	if err != nil {
 		return err

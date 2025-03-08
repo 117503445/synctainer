@@ -4,3 +4,5 @@ app
 pkg/rpc
 fe/src/rpc/*.ts
 node_modules
+.env
+config.toml

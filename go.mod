@@ -4,6 +4,8 @@ go 1.23.4
 
 require (
 	github.com/117503445/goutils v0.0.0-20250306170112-72b42153d0a7
+	github.com/alecthomas/kong v1.8.1
+	github.com/alecthomas/kong-toml v0.2.0
 	github.com/imroc/req/v3 v3.50.0
 	github.com/novln/docker-parser v1.0.0
 	github.com/regclient/regclient v0.8.2
@@ -27,6 +29,7 @@ require (
 	github.com/mattn/go-colorable v0.1.14 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/onsi/ginkgo/v2 v2.23.0 // indirect
+	github.com/pelletier/go-toml v1.9.5 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/quic-go/qpack v0.5.1 // indirect
 	github.com/quic-go/quic-go v0.50.0 // indirect

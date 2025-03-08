@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/117503445/goutils"
+	"github.com/117503445/synctainer/pkg/cfg"
 	"github.com/117503445/synctainer/pkg/gh"
 	"github.com/117503445/synctainer/pkg/rpc"
 	"github.com/rs/cors"
@@ -13,6 +14,16 @@ import (
 
 type server struct {
 	rpc.Fc
+	githubToken string
+}
+
+func newServer(githubToken string) *server {
+	if githubToken == "" {
+		log.Fatal().Msg("github token is empty")
+	}
+	return &server{
+		githubToken: githubToken,
+	}
 }
 
 func (s *server) PostTask(ctx context.Context, req *rpc.ReqPostTask) (*rpc.RespPostTask, error) {
@@ -21,7 +32,7 @@ func (s *server) PostTask(ctx context.Context, req *rpc.ReqPostTask) (*rpc.RespP
 	// 	return nil, err
 	// }
 
-	err := gh.TriggerGithubAction(req.Image, req.Platform)
+	err := gh.TriggerGithubAction(req.Image, req.Platform, s.githubToken)
 	if err != nil {
 		return nil, err
 	}
@@ -37,8 +48,11 @@ func (s *server) PostTask(ctx context.Context, req *rpc.ReqPostTask) (*rpc.RespP
 func main() {
 	// goutils.InitZeroLog(goutils.WithNoColor{})
 	goutils.InitZeroLog()
+
+	cfg.CfgLoad()
+
 	log.Info().Msg("Starting server...")
-	s := &server{}
+	s := newServer(cfg.Cfg.GithubToken)
 	var handler http.Handler
 
 	handler = rpc.NewFcServer(s)

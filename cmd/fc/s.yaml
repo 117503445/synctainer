@@ -18,6 +18,15 @@ resources:
         port: 8080
         command:
           - /code/app
+      environmentVariables:
+        SYNCTAINER_CONFIG: ${file('../../config.toml')}
+        VER: "1408"
+      logConfig:
+        enableRequestMetrics: true
+        enableInstanceMetrics: true
+        logBeginRule: DefaultRegex
+        project: serverless-cn-hangzhou-ad10cb59-a595-51d8-a660-1c81bfc11ac3
+        logstore: default-logs
       triggers:
         - triggerName: httpTrigger
           triggerType: http
