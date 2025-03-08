@@ -12,21 +12,21 @@ on:
         required: false
         default: "linux/amd64"
       taskId:
-        description: 'task id'
+        description: "task id"
         required: false
         default: ""
       fcCallback:
-        description: 'fc callback'
+        description: "fc callback"
         required: false
         default: ""
       registry:
-        description: 'target registry, exp: registry.cn-hangzhou.aliyuncs.com'
+        description: "target registry, exp: registry.cn-hangzhou.aliyuncs.com"
         required: true
       username:
-        description: 'target registry username'
+        description: "target registry username"
         required: false
       password:
-        description: 'target registry password'
+        description: "target registry password"
         required: false
 
 jobs:
@@ -52,3 +52,8 @@ jobs:
         env:
           IMAGE: "${{ github.event.inputs.image }}"
           PLATFORM: "${{ github.event.inputs.platform }}"
+          TASK_ID: "${{ github.event.inputs.taskId }}"
+          FC_CALLBACK: "${{ github.event.inputs.fcCallback }}"
+          REGISTRY: "${{ github.event.inputs.registry }}"
+          USERNAME: "${{ github.event.inputs.username }}"
+          PASSWORD: "${{ github.event.inputs.password }}"

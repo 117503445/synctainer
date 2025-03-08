@@ -12,7 +12,7 @@ import (
 
 var Cfg struct {
 	GithubToken string
-	FcCallback  string
+	FcCallback  string  `env:"FC_CALLBACK"`
 
 	Image    string `env:"IMAGE"`
 	Platform string `env:"PLATFORM" default:"linux/amd64"`

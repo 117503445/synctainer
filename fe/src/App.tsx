@@ -94,8 +94,8 @@ function App() {
         />
 
         <TextField required label="Target Registry" variant="outlined" value={registry} onChange={(e) => setRegistry(e.target.value)} />
-        <TextField label="Username" variant="outlined" value={username} onChange={(e) => setUsername(e.target.value)} />
-        <TextField label="Password" type={showPassword ? 'text' : 'password'} variant="outlined" value={password}
+        <TextField required label="Username" variant="outlined" value={username} onChange={(e) => setUsername(e.target.value)} />
+        <TextField required label="Password" type={showPassword ? 'text' : 'password'} variant="outlined" value={password}
           InputProps={{
             endAdornment: (
               <IconButton
