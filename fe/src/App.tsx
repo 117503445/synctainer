@@ -1,6 +1,6 @@
 import './App.css'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRef } from 'react';
 
 import Stack from '@mui/material/Stack';
@@ -13,8 +13,9 @@ import FileCopyIcon from '@mui/icons-material/FileCopy';
 import Link from '@mui/material/Link';
 import { SnackbarProvider, enqueueSnackbar, VariantType } from 'notistack';
 import { client, TwirpError } from "twirpscript";
-import { PostTask, ReqPostTask, RespPostTask } from "./rpc/synctainer.pb";
-
+import { PostTask, RespPostTask } from "./rpc/synctainer.pb";
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const platforms = [
   "linux/amd64",
@@ -28,7 +29,18 @@ function App() {
   const [image, setImage] = useState("")
   const [platform, setPlatform] = useState("linux/amd64")
 
+  const [registry, setRegistry] = useState(localStorage.getItem('registry') || "")
+  const [username, setUsername] = useState(localStorage.getItem('username') || "")
+  const [password, setPassword] = useState(localStorage.getItem('password') || "")
+
   const [btnSyncDisable, setBtnSyncDisable] = useState(false)
+
+  useEffect(() => {
+    // 监听状态变化并更新 localStorage
+    localStorage.setItem('registry', registry);
+    localStorage.setItem('username', username);
+    localStorage.setItem('password', password);
+  }, [registry, username, password]);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -47,6 +59,17 @@ function App() {
         horizontal: 'center',
       },
     });
+  };
+
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleMouseDownPassword = (event: { preventDefault: () => void; }) => {
+    event.preventDefault();
   };
 
   return (
@@ -69,6 +92,22 @@ function App() {
             }
           }}
         />
+
+        <TextField required label="Target Registry" variant="outlined" value={registry} onChange={(e) => setRegistry(e.target.value)} />
+        <TextField label="Username" variant="outlined" value={username} onChange={(e) => setUsername(e.target.value)} />
+        <TextField label="Password" type={showPassword ? 'text' : 'password'} variant="outlined" value={password}
+          InputProps={{
+            endAdornment: (
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={handleClickShowPassword}
+                onMouseDown={handleMouseDownPassword}
+              >
+                {showPassword ? <Visibility /> : <VisibilityOff />}
+              </IconButton>
+            ),
+          }}
+          onChange={(e) => setPassword(e.target.value)} />
 
         <Button variant="contained"
           disabled={btnSyncDisable}
@@ -106,14 +145,14 @@ function App() {
                 respPostTask = await PostTask({
                   image: image,
                   platform: platform,
-                  registry: "",
-                  username: "",
-                  password: "",
+                  registry: registry,
+                  username: username,
+                  password: password,
                 })
               } catch (error) {
-                if (error instanceof TwirpError){
+                if (error instanceof TwirpError) {
                   sendToast('error', `Trigger Image Sync Failed: ${error.msg}`)
-                }else{
+                } else {
                   sendToast('error', `Trigger Image Sync Failed: ${error}`)
                 }
                 setBtnSyncDisable(false)
