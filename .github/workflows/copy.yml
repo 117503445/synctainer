@@ -30,7 +30,7 @@ on:
         required: false
 
 jobs:
-  build:
+  copy:
     runs-on: ubuntu-latest
     environment: production
 
@@ -57,3 +57,4 @@ jobs:
           REGISTRY: "${{ github.event.inputs.registry }}"
           USERNAME: "${{ github.event.inputs.username }}"
           PASSWORD: "${{ github.event.inputs.password }}"
+          RUN_ID: "${{ github.run_id }}"
