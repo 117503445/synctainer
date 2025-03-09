@@ -9,16 +9,20 @@ import (
 type cmdCreateTable struct {
 }
 
-var cli struct {
-	CreateTable cmdCreateTable `cmd:"" help:"create table"`
-
-	TablestoreAk           string
-	TablestoreSk           string
-	TablestoreEndpoint     string
-	TablestoreName string
+type cmdPutRow struct {
 }
 
-func cfgLoad() {
+var cli struct {
+	CreateTable cmdCreateTable `cmd:"" help:"create table"`
+	PutRow      cmdPutRow      `cmd:"" help:"put row"`
+
+	TablestoreAk       string
+	TablestoreSk       string
+	TablestoreEndpoint string
+	TablestoreName     string
+}
+
+func CliLoad() {
 	ctx := kong.Parse(&cli, kong.Configuration(kongtoml.Loader, "/workspace/config.toml"))
 	log.Info().Interface("cli", cli).Send()
 	err := ctx.Run()

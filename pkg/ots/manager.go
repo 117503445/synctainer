@@ -44,9 +44,31 @@ func (tm *TableManager) CreateTable() {
 		ReservedThroughput: reservedThroughput,
 	}
 
-	if response, err := tm.client.CreateTable(request); err != nil {
+	if resp, err := tm.client.CreateTable(request); err != nil {
 		log.Fatal().Err(err).Msg("create table")
 	} else {
-		log.Info().Interface("response", response).Msg("create table done")
+		log.Info().Interface("resp", resp).Msg("create table done")
 	}
+}
+
+func (tm *TableManager) PutRow(id string, column map[string]any) error {
+	putRowRequest := new(tablestore.PutRowRequest)
+	putRowChange := new(tablestore.PutRowChange)
+	putRowChange.TableName = tableName
+	putPk := new(tablestore.PrimaryKey)
+	putPk.AddPrimaryKeyColumn("id", id)
+	putRowChange.PrimaryKey = putPk
+
+	for k, v := range column {
+		putRowChange.AddColumn(k, v)
+	}
+	putRowChange.SetCondition(tablestore.RowExistenceExpectation_IGNORE)
+	putRowRequest.PutRowChange = putRowChange
+	resp, err := tm.client.PutRow(putRowRequest)
+	if err != nil {
+		return err
+	}
+	log.Info().Discard().Interface("response", resp).Msg("put row done")
+
+	return nil
 }
