@@ -10,8 +10,8 @@ service Fc {
     // called by fe
     rpc PostTask(ReqPostTask) returns (RespPostTask);
     rpc GetTask(ReqGetTask) returns (RespGetTask);
-    // called by gh
-    rpc PutTask(ReqPutTask) returns (RespPutTask);
+    // called by gh, update non-empty fields
+    rpc PatchTask(ReqPatchTask) returns (RespPatchTask);
 }
 
 message ReqPostTask{
@@ -23,6 +23,8 @@ message ReqPostTask{
 }
 message RespPostTask{
     string id = 1; // run id for the sync task
+
+    string tagImage = 2;
 }
 
 message ReqGetTask{
@@ -33,10 +35,10 @@ message RespGetTask{
     string github_action_url = 2;
 }
 
-message ReqPutTask{
+message ReqPatchTask{
     string id = 1;
     string digest = 2;
-    string github_action_url = 3;
+    string github_action_run_id = 3;
 }
-message RespPutTask{
+message RespPatchTask{
 }
