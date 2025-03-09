@@ -1,2 +1,11 @@
 [github]
 token = ""
+
+[tablestore]
+ak = ""
+sk = ""
+endpoint = ""
+name = ""
+
+[fc]
+callback = "https://synctainer-api.117503445.top"

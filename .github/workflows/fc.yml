@@ -29,6 +29,8 @@ jobs:
 
       - run: CGO_ENABLED=0 go build -o ./cmd/fc/app ./cmd/fc
 
+      - run: echo "${{secrets.CFG}}" > ./config.toml
+
       # https://help.aliyun.com/document_detail/295913.html
       - name: deploy
         working-directory: cmd/fc

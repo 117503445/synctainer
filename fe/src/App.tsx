@@ -4,20 +4,17 @@ import { useState, useEffect } from 'react'
 import { useRef } from 'react';
 
 import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import FileCopyIcon from '@mui/icons-material/FileCopy';
 import Link from '@mui/material/Link';
 import { SnackbarProvider, enqueueSnackbar, VariantType } from 'notistack';
 import { client, TwirpError } from "twirpscript";
-import { GetTask, PostTask, RespPostTask } from "./rpc/synctainer.pb";
+import { GetTask, PostTask } from "./rpc/synctainer.pb";
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import CopyableTextField from './components/CopyableTextField';
-
 const platforms = [
   "linux/amd64",
   "linux/arm64",
@@ -102,7 +99,9 @@ function App() {
           }}
         />
 
-        <TextField required label="Target Registry" variant="outlined" value={registry} onChange={(e) => setRegistry(e.target.value)} />
+        <TextField required label="Target Registry" variant="outlined" value={registry}
+          placeholder='registry.cn-hangzhou.aliyuncs.com'
+          onChange={(e) => setRegistry(e.target.value)} />
         <TextField required label="Username" variant="outlined" value={username} onChange={(e) => setUsername(e.target.value)} />
         <TextField required label="Password" type={showPassword ? 'text' : 'password'} variant="outlined" value={password}
           InputProps={{
@@ -174,9 +173,9 @@ function App() {
 
 
                       setHashImage(respGetTask.digest);
-                      sendToast('success', `Image Sync Completed: ${respGetTask.digest}`);
+                      sendToast('success', `Sync Task Started`)
                     }
-                  } catch (error) {
+                  } catch (error: unknown) {
                     // 错误处理
                     timerRef.current.forEach(id => clearTimeout(id));
                     timerRef.current = [];
@@ -189,7 +188,7 @@ function App() {
                 }, delay * 1000);
                 timerRef.current.push(timerId);
               });
-            } catch (error) {
+            } catch (error: unknown) {
               if (error instanceof TwirpError) {
                 sendToast('error', `Trigger Image Sync Failed: ${error.msg}`)
               } else {
@@ -199,7 +198,7 @@ function App() {
               return
             }
 
-            sendToast('success', `Trigger Image Sync Successfully`)
+            sendToast('success', `Sync Task Starting`)
             setBtnSyncDisable(false)
           }}>Sync</Button>
 
