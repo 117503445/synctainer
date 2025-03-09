@@ -23,22 +23,7 @@ var cfg struct {
 }
 
 func CfgLoad() {
-	currentUser, err := user.Current()
-	if err != nil {
-		log.Fatal().Err(err).Send()
-	}
-	fileHomeCfg := currentUser.HomeDir + "/.config/synctainer/config.toml"
-
-	envCfg := os.Getenv("SYNCTAINER_CONFIG")
-	if envCfg != "" {
-		err := goutils.WriteText(fileHomeCfg, envCfg)
-		if err != nil {
-			log.Fatal().Err(err).Msg("WriteText")
-		}
-		log.Info().Str("envCfg", envCfg).Send()
-	}
-
-	kong.Parse(&cfg, kong.Configuration(kongtoml.Loader, "/workspace/config.toml", fileHomeCfg))
+	kong.Parse(&cfg, kong.Configuration(kongtoml.Loader))
 	if cfg.Registry == "" {
 		log.Fatal().Msg("Registry is empty")
 	}

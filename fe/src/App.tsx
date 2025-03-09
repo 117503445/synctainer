@@ -13,9 +13,10 @@ import FileCopyIcon from '@mui/icons-material/FileCopy';
 import Link from '@mui/material/Link';
 import { SnackbarProvider, enqueueSnackbar, VariantType } from 'notistack';
 import { client, TwirpError } from "twirpscript";
-import { PostTask, RespPostTask } from "./rpc/synctainer.pb";
+import { GetTask, PostTask, RespPostTask } from "./rpc/synctainer.pb";
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import CopyableTextField from './components/CopyableTextField';
 
 const platforms = [
   "linux/amd64",
@@ -35,6 +36,16 @@ function App() {
 
   const [btnSyncDisable, setBtnSyncDisable] = useState(false)
 
+  const [githubActionUrl, setGithubActionUrl] = useState("")
+
+  const timerRef = useRef<number[]>([]); // 新增定时器引用
+
+  // const inputRef = useRef<HTMLInputElement>(null);
+
+  const [tagImage, setTagImage] = useState("")
+  const [hashImage, setHashImage] = useState("")
+
+
   useEffect(() => {
     // 监听状态变化并更新 localStorage
     localStorage.setItem('registry', registry);
@@ -42,14 +53,12 @@ function App() {
     localStorage.setItem('password', password);
   }, [registry, username, password]);
 
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  const handleCopy = () => {
-    if (inputRef.current && inputRef.current.value) {
-      navigator.clipboard.writeText(inputRef.current.value);
-      sendToast('success', `Copied to clipboard: ${inputRef.current.value}`)
-    }
-  };
+  useEffect(() => {
+    return () => {
+      // 清理所有定时器
+      timerRef.current.forEach(id => clearTimeout(id));
+    };
+  }, []);
 
   const sendToast = (variant: VariantType, msg: string) => {
     enqueueSnackbar(msg, {
@@ -124,86 +133,83 @@ function App() {
 
             console.info(`Syncing ${image} with ${platform}`)
 
-            const MOCK = false
-            // const MOCK = true // should be false in production
+            let taskId = ""
+            let newImage: string = "" // TODO
 
-            // let response: Response
-            let respPostTask: RespPostTask
 
-            if (!MOCK) {
-              try {
-                // response = await fetch(`${host}`, {
-                //   method: 'POST',
-                //   body: JSON.stringify({
-                //     image: image,
-                //     platform: platform,
-                //   }),
-                //   headers: {
-                //     'Content-Type': 'application/json',
-                //   }
-                // })
-                respPostTask = await PostTask({
-                  image: image,
-                  platform: platform,
-                  registry: registry,
-                  username: username,
-                  password: password,
-                })
-                console.log(respPostTask)
-              } catch (error) {
-                if (error instanceof TwirpError) {
-                  sendToast('error', `Trigger Image Sync Failed: ${error.msg}`)
-                } else {
-                  sendToast('error', `Trigger Image Sync Failed: ${error}`)
-                }
-                setBtnSyncDisable(false)
-                return
+            try {
+              const respPostTask = await PostTask({
+                image: image,
+                platform: platform,
+                registry: registry,
+                username: username,
+                password: password,
+              })
+              console.log("respPostTask", respPostTask)
+              taskId = respPostTask.id
+              newImage = respPostTask.tagImage
+
+              // 清除之前的定时器
+              timerRef.current.forEach(id => clearTimeout(id));
+              timerRef.current = [];
+
+              // 设置定时轮询
+              const delays = [10, 20, 30, 40, 50, 60, 120, 180, 240, 300];
+              delays.forEach(delay => {
+                const timerId = window.setTimeout(async () => {
+                  try {
+                    const respGetTask = await GetTask({ id: taskId });
+                    if (respGetTask.digest) {
+                      // 成功获取digest，清理所有定时器
+                      timerRef.current.forEach(id => clearTimeout(id));
+                      timerRef.current = [];
+                      setBtnSyncDisable(false);
+                      setGithubActionUrl(respGetTask.githubActionUrl);
+                      sendToast('success', `Image Sync Completed: ${respGetTask.digest}`);
+
+                      setHashImage(respGetTask.digest);
+                    }
+                  } catch (error) {
+                    // 错误处理
+                    timerRef.current.forEach(id => clearTimeout(id));
+                    timerRef.current = [];
+                    setBtnSyncDisable(false);
+                    if (error instanceof TwirpError) {
+                      sendToast('error', `Get Task Failed: ${error.msg}`);
+                    } else {
+                      sendToast('error', `Get Task Failed: ${error}`);
+                    }
+                  }
+                }, delay * 1000);
+                timerRef.current.push(timerId);
+              });
+            } catch (error) {
+              if (error instanceof TwirpError) {
+                sendToast('error', `Trigger Image Sync Failed: ${error.msg}`)
+              } else {
+                sendToast('error', `Trigger Image Sync Failed: ${error}`)
               }
-            } else {
-              // await new Promise(resolve => setTimeout(resolve, 1000))
-              // response = new Response(JSON.stringify({
-              //   image: "registry.cn-hangzhou.aliyuncs.com/117503445-mirror/sync:docker.io.library.mysql.latest"
-              // }))
+              setBtnSyncDisable(false)
+              return
             }
 
-
-            // let resp = { image: "" }
-
-            // let text = await response.text()
-            // console.log(text)
-
-            // try {
-            //   resp = JSON.parse(text)
-            // } catch (error) {
-            //   sendToast('error', `Trigger Image Sync Failed: ${text}`)
-            //   setBtnSyncDisable(false)
-            //   return
-            // }
-
-
-            // let newImage: string = resp.image
-            let newImage: string = image // TODO
-
-            // setOpenTriggerReqSnackbar(false)
-            // setOpenTriggerRespSnackbar(true)
             sendToast('success', `Trigger Image Sync Successfully`)
             setBtnSyncDisable(false)
-            if (inputRef.current) {
-              inputRef.current.value = newImage
-            }
+            setTagImage(newImage)
           }}>Sync</Button>
-        <div>
-          <Box display="flex" alignItems="center">
-            <TextField inputRef={inputRef} variant="outlined" fullWidth disabled multiline size="small" inputProps={{ style: { fontSize: 14 } }} />
-            <IconButton onClick={handleCopy} sx={{ height: '100%', marginLeft: '-0px', "&:focus": { outline: 'none' } }}>
-              <FileCopyIcon />
-            </IconButton>
-          </Box>
-        </div>
 
-        <Link href="https://github.com/117503445/synctainer/actions/workflows/copy.yml"
-          target="_blank">See Progress</Link>
-      </Stack>
+        <CopyableTextField value={tagImage} onChange={(e) => setTagImage(e.target.value)} />
+        <CopyableTextField value={hashImage} onChange={(e) => setHashImage(e.target.value)} />
+
+        {githubActionUrl && (
+          <Link
+            href={githubActionUrl}
+            target="_blank"
+          >
+            See Progress
+          </Link>
+        )}
+      </Stack >
     </>
   )
 }
