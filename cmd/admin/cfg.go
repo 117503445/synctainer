@@ -12,9 +12,10 @@ type cmdCreateTable struct {
 var cli struct {
 	CreateTable cmdCreateTable `cmd:"" help:"create table"`
 
-	TablestoreAk       string
-	TablestoreSk       string
-	TablestoreEndpoint string
+	TablestoreAk           string
+	TablestoreSk           string
+	TablestoreEndpoint     string
+	TablestoreName string
 }
 
 func cfgLoad() {

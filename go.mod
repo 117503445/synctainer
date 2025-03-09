@@ -6,6 +6,7 @@ require (
 	github.com/117503445/goutils v0.0.0-20250307183532-33774ca8b459
 	github.com/alecthomas/kong v1.8.1
 	github.com/alecthomas/kong-toml v0.2.0
+	github.com/aliyun/aliyun-tablestore-go-sdk v1.7.17
 	github.com/imroc/req/v3 v3.50.0
 	github.com/novln/docker-parser v1.0.0
 	github.com/regclient/regclient v0.8.2
@@ -21,10 +22,13 @@ require (
 	github.com/cloudflare/circl v1.6.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-task/slim-sprig/v3 v3.0.0 // indirect
+	github.com/golang/protobuf v1.5.0 // indirect
+	github.com/google/flatbuffers v23.5.26+incompatible // indirect
 	github.com/google/pprof v0.0.0-20250302191652-9094ed2288e7 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
+	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/klauspost/compress v1.18.0 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
