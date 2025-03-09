@@ -27,10 +27,12 @@ func main() {
 		client = rpc.NewFcProtobufClient(
 			cfg.FcCallback, http.DefaultClient,
 		)
-		
+
 		t := &rpc.ReqPatchTask{
+			Id:                cfg.TaskId,
 			GithubActionRunId: cfg.RunId,
 		}
+		log.Info().Str("githubActionRunId", cfg.RunId).Msg("PatchTask")
 		_, err := client.PatchTask(context.Background(), t)
 		if err != nil {
 			log.Warn().Err(err).Interface("PatchTask", t).Send()
@@ -63,8 +65,10 @@ func main() {
 
 	if enableFc {
 		t := &rpc.ReqPatchTask{
+			Id:     cfg.TaskId,
 			Digest: digest,
 		}
+		log.Info().Str("digest", digest).Msg("PatchTask")
 		_, err := client.PatchTask(context.Background(), t)
 		if err != nil {
 			log.Warn().Interface("PatchTask", t).Err(err).Send()

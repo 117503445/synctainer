@@ -162,6 +162,7 @@ function App() {
                   console.log("GetTask", "delay", delay)
                   try {
                     const respGetTask = await GetTask({ id: taskId });
+                    console.log("respGetTask", respGetTask)
                     if (respGetTask.githubActionUrl) {
                       setGithubActionUrl(respGetTask.githubActionUrl);
                     }

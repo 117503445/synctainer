@@ -18,15 +18,17 @@ type server struct {
 	rpc.Fc
 	tm          *ots.TableManager
 	githubToken string
+	fcCallback  string
 }
 
-func newServer(githubToken string, tm *ots.TableManager) *server {
+func newServer(githubToken string, tm *ots.TableManager, fcCallback string) *server {
 	if githubToken == "" {
 		log.Fatal().Msg("github token is empty")
 	}
 	return &server{
 		githubToken: githubToken,
 		tm:          tm,
+		fcCallback:  fcCallback,
 	}
 }
 
@@ -43,7 +45,7 @@ func (s *server) PostTask(ctx context.Context, req *rpc.ReqPostTask) (*rpc.RespP
 		return nil, err
 	}
 
-	err = gh.TriggerGithubAction(id, req.Image, req.Platform, req.Registry, req.Username, req.Password, s.githubToken, "TODO")
+	err = gh.TriggerGithubAction(id, req.Image, req.Platform, req.Registry, req.Username, req.Password, s.githubToken, s.fcCallback)
 	if err != nil {
 		return nil, err
 	}
@@ -74,11 +76,14 @@ func (s *server) GetTask(ctx context.Context, req *rpc.ReqGetTask) (*rpc.RespGet
 }
 
 func (s *server) PatchTask(ctx context.Context, req *rpc.ReqPatchTask) (*rpc.RespPatchTask, error) {
-	m := map[string]any{
-		"digest":               req.Digest,
-		"github_action_run_id": req.GithubActionRunId,
+	m := map[string]any{}
+	if req.Digest != "" {
+		m["digest"] = req.Digest
 	}
-
+	if req.GithubActionRunId != "" {
+		m["github_action_run_id"] = req.GithubActionRunId
+	}
+	log.Debug().Interface("m", m).Msg("PatchTask")
 	err := s.tm.UpdateRow(req.Id, m)
 	if err != nil {
 		log.Warn().Err(err).Msg("UpdateRow")
@@ -99,7 +104,7 @@ func main() {
 		log.Fatal().Err(err).Msg("NewTableManager")
 	}
 
-	s := newServer(cfg.GithubToken, tm)
+	s := newServer(cfg.GithubToken, tm, cfg.FcCallback)
 	var handler http.Handler
 
 	handler = rpc.NewFcServer(s)
