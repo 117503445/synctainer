@@ -22,10 +22,19 @@ func (c *cmdPutRow) Run() error {
 	err = tm.PutRow("task1", map[string]any{
 		"k1": "v1",
 	})
+	return err
+}
+
+func (c *cmdUpdateRow) Run() error {
+	tm, err := ots.NewTableManager(cli.TablestoreEndpoint, cli.TablestoreName, cli.TablestoreAk, cli.TablestoreSk)
 	if err != nil {
 		return err
 	}
-	return nil
+	err = tm.UpdateRow("task1", map[string]any{
+		"k1": "v2",
+		"k2": "v2",
+	})
+	return err
 }
 
 func main() {

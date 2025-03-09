@@ -72,3 +72,24 @@ func (tm *TableManager) PutRow(id string, column map[string]any) error {
 
 	return nil
 }
+
+func (tm *TableManager) UpdateRow(id string, column map[string]any) error {
+	updateRowRequest := new(tablestore.UpdateRowRequest)
+	updateRowChange := new(tablestore.UpdateRowChange)
+	updateRowChange.TableName = tableName
+	updatePk := new(tablestore.PrimaryKey)
+	updatePk.AddPrimaryKeyColumn("id", id)
+	updateRowChange.PrimaryKey = updatePk
+	for k, v := range column {
+		updateRowChange.PutColumn(k, v)
+	}
+	updateRowChange.SetCondition(tablestore.RowExistenceExpectation_EXPECT_EXIST)
+	updateRowRequest.UpdateRowChange = updateRowChange
+	resp, err := tm.client.UpdateRow(updateRowRequest)
+	if err != nil {
+		return err
+	}
+	log.Info().Discard().Interface("response", resp).Msg("update row done")
+
+	return nil
+}
