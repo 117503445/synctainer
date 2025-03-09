@@ -38,6 +38,11 @@ func (s *server) PostTask(ctx context.Context, req *rpc.ReqPostTask) (*rpc.RespP
 
 	id := goutils.UUID7()
 
+	err = s.tm.PutRow(id, map[string]any{})
+	if err != nil {
+		return nil, err
+	}
+
 	err = gh.TriggerGithubAction(id, req.Image, req.Platform, req.Registry, req.Username, req.Password, s.githubToken, "TODO")
 	if err != nil {
 		return nil, err

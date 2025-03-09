@@ -1,10 +1,6 @@
 package main
 
 import (
-	"os"
-	"os/user"
-
-	"github.com/117503445/goutils"
 	"github.com/alecthomas/kong"
 	kongtoml "github.com/alecthomas/kong-toml"
 	"github.com/rs/zerolog/log"

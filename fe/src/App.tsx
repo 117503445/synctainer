@@ -129,13 +129,18 @@ function App() {
 
             sendToast('info', `Trigger Image Sync`)
 
+            // 清除之前的定时器
+            timerRef.current.forEach(id => clearTimeout(id));
+            timerRef.current = [];
+            setTagImage("")
+            setHashImage("")
+            setGithubActionUrl("")
+
             setBtnSyncDisable(true)
 
             console.info(`Syncing ${image} with ${platform}`)
 
             let taskId = ""
-            let newImage: string = "" // TODO
-
 
             try {
               const respPostTask = await PostTask({
@@ -147,33 +152,31 @@ function App() {
               })
               console.log("respPostTask", respPostTask)
               taskId = respPostTask.id
-              newImage = respPostTask.tagImage
-
-              // 清除之前的定时器
-              timerRef.current.forEach(id => clearTimeout(id));
-              timerRef.current = [];
+              setTagImage(respPostTask.tagImage)
 
               // 设置定时轮询
               const delays = [10, 20, 30, 40, 50, 60, 120, 180, 240, 300];
+              console.log("delays", delays)
               delays.forEach(delay => {
                 const timerId = window.setTimeout(async () => {
+                  console.log("GetTask", "delay", delay)
                   try {
                     const respGetTask = await GetTask({ id: taskId });
+                    if (respGetTask.githubActionUrl) {
+                      setGithubActionUrl(respGetTask.githubActionUrl);
+                    }
                     if (respGetTask.digest) {
                       // 成功获取digest，清理所有定时器
                       timerRef.current.forEach(id => clearTimeout(id));
                       timerRef.current = [];
-                      setBtnSyncDisable(false);
-                      setGithubActionUrl(respGetTask.githubActionUrl);
-                      sendToast('success', `Image Sync Completed: ${respGetTask.digest}`);
 
                       setHashImage(respGetTask.digest);
+                      sendToast('success', `Image Sync Completed: ${respGetTask.digest}`);
                     }
                   } catch (error) {
                     // 错误处理
                     timerRef.current.forEach(id => clearTimeout(id));
                     timerRef.current = [];
-                    setBtnSyncDisable(false);
                     if (error instanceof TwirpError) {
                       sendToast('error', `Get Task Failed: ${error.msg}`);
                     } else {
@@ -195,7 +198,6 @@ function App() {
 
             sendToast('success', `Trigger Image Sync Successfully`)
             setBtnSyncDisable(false)
-            setTagImage(newImage)
           }}>Sync</Button>
 
         <CopyableTextField value={tagImage} onChange={(e) => setTagImage(e.target.value)} />

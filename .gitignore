@@ -1,8 +1,6 @@
 compose.override.yaml
 app
 .pnpm-store
-pkg/rpc
-fe/src/rpc/*.ts
 node_modules
 .env
 config.toml
