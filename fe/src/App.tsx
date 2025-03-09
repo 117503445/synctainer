@@ -168,8 +168,10 @@ function App() {
                     }
                     if (respGetTask.digest) {
                       // 成功获取digest，清理所有定时器
+                      console.log("success get digest, clearing all timers");
                       timerRef.current.forEach(id => clearTimeout(id));
                       timerRef.current = [];
+
 
                       setHashImage(respGetTask.digest);
                       sendToast('success', `Image Sync Completed: ${respGetTask.digest}`);

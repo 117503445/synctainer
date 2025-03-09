@@ -63,18 +63,6 @@ func main() {
 	srcRef.Digest = digest
 	srcImage := srcRef.CommonName()
 
-	if enableFc {
-		t := &rpc.ReqPatchTask{
-			Id:     cfg.TaskId,
-			Digest: digest,
-		}
-		log.Info().Str("digest", digest).Msg("PatchTask")
-		_, err := client.PatchTask(context.Background(), t)
-		if err != nil {
-			log.Warn().Interface("PatchTask", t).Err(err).Send()
-		}
-	}
-
 	// srcImage := ""
 	// if strings.Contains(cfg.Image, "sha256") {
 	// 	srcImage = cfg.Image
@@ -105,11 +93,25 @@ func main() {
 	// 	srcImage = srcRef.CommonName()
 	// }
 
-	newImage, err := convert.ConvertToNewImage(cfg.Image, cfg.Platform)
+	newTagImage, err := convert.ConvertToNewImage(cfg.Image, cfg.Platform)
 	if err != nil {
 		log.Fatal().Err(err).Msg("ConvertToNewImage")
 	}
-	log.Info().Str("srcImage", srcImage).Str("newImage", newImage).Msg("ConvertToNewImage")
+
+	newHashImage := strings.Split(newTagImage, ":")[0] + ":" + digest
+	log.Info().Str("srcImage", srcImage).Str("newTagImage", newTagImage).Str("newHashImage", newHashImage).Msg("ConvertToNewImage")
+
+	if enableFc {
+		t := &rpc.ReqPatchTask{
+			Id:     cfg.TaskId,
+			Digest: newHashImage,
+		}
+		log.Info().Str("digest", digest).Msg("PatchTask")
+		_, err := client.PatchTask(context.Background(), t)
+		if err != nil {
+			log.Warn().Interface("PatchTask", t).Err(err).Send()
+		}
+	}
 
 	cmds := []string{
 		"regctl", "registry", "login", cfg.Registry, "--user", cfg.Username, "--pass", cfg.Password,
@@ -131,7 +133,7 @@ func main() {
 
 	_, err = gexec.Run(
 		gexec.Commands([]string{
-			"regctl", "image", "copy", srcImage, newImage, "--verbosity", "trace",
+			"regctl", "image", "copy", srcImage, newTagImage, "--verbosity", "trace",
 		}),
 		&gexec.RunCfg{
 			Writers: []io.Writer{os.Stdout},
