@@ -12,7 +12,7 @@ import (
 
 var Cfg struct {
 	GithubToken string
-	FcCallback  string  `env:"FC_CALLBACK"`
+	FcCallback  string `env:"FC_CALLBACK"`
 
 	Image    string `env:"IMAGE"`
 	Platform string `env:"PLATFORM" default:"linux/amd64"`
@@ -65,13 +65,17 @@ func CfgLoad(role string) {
 	kong.Parse(&Cfg, kong.Configuration(kongtoml.Loader, "/workspace/config.toml", fileHomeCfg))
 
 	cfgCheck(role)
+	if role == "gh" {
+		log.Info().
+			Str("FcCallback", Cfg.FcCallback).
+			Str("Platform", Cfg.Platform).
+			Str("Image", Cfg.Image).
+			Str("TaskId", Cfg.TaskId).
+			Str("Registry", Cfg.Registry).
+			Str("Username", Cfg.Username).
+			Send()
+	} else {
+		log.Info().Interface("Cfg", Cfg).Send()
+	}
 
-	log.Info().
-		Str("FcCallback", Cfg.FcCallback).
-		Str("Platform", Cfg.Platform).
-		Str("Image", Cfg.Image).
-		Str("TaskId", Cfg.TaskId).
-		Str("Registry", Cfg.Registry).
-		Str("Username", Cfg.Username).
-		Send()
 }
