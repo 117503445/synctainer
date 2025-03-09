@@ -93,3 +93,26 @@ func (tm *TableManager) UpdateRow(id string, column map[string]any) error {
 
 	return nil
 }
+
+func (tm *TableManager) GetRow(id string) (map[string]any, error) {
+	getRowRequest := new(tablestore.GetRowRequest)
+	criteria := new(tablestore.SingleRowQueryCriteria)
+	putPk := new(tablestore.PrimaryKey)
+	putPk.AddPrimaryKeyColumn("id", id)
+
+	criteria.PrimaryKey = putPk
+	getRowRequest.SingleRowQueryCriteria = criteria
+	getRowRequest.SingleRowQueryCriteria.TableName = tableName
+	getRowRequest.SingleRowQueryCriteria.MaxVersion = 1
+	getResp, err := tm.client.GetRow(getRowRequest)
+	if err != nil {
+		return nil, err
+	}
+
+	r := map[string]any{}
+	for _, col := range getResp.Columns {
+		r[col.ColumnName] = col.Value
+	}
+
+	return r, nil
+}

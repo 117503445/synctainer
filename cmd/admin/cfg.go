@@ -15,10 +15,14 @@ type cmdPutRow struct {
 type cmdUpdateRow struct {
 }
 
+type cmdGetRow struct {
+}
+
 var cli struct {
 	CreateTable cmdCreateTable `cmd:"" help:"create table"`
 	PutRow      cmdPutRow      `cmd:"" help:"put row"`
 	UpdateRow   cmdUpdateRow   `cmd:"" help:"update row"`
+	GetRow      cmdGetRow      `cmd:"" help:"get row"`
 
 	TablestoreAk       string
 	TablestoreSk       string
