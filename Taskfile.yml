@@ -6,7 +6,7 @@ tasks:
     # deps: [deploy]
     cmds:
       - clear
-      - task: gh-run
+      - task: cli-run
       
   fc-build:
     cmds:
@@ -40,3 +40,8 @@ tasks:
     deps: [fe-build]
     cmds:
       - ossutil cp -rf ./fe/dist oss://synctainer
+
+  cli-run:
+    cmds:
+      # - go run ./cmd/cli
+      - go run ./cmd/cli sync-image traefik

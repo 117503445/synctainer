@@ -1,4 +1,4 @@
-name: gh
+name: release
 
 on: push
 
@@ -8,9 +8,6 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
-    # defaults:
-    #   run:
-    #     working-directory: ./src/gh
 
     steps:
       - uses: actions/checkout@master
@@ -23,6 +20,7 @@ jobs:
       # - run: go test ./...
 
       - run: CGO_ENABLED=0 go build -o ./cmd/gh/copier ./cmd/gh
+      - run: CGO_ENABLED=0 go build -o ./cmd/cli/synctainer ./cmd/cli
 
       - name: Generate release tag
         if: "!startsWith(github.ref, 'refs/tags/')"
@@ -37,6 +35,7 @@ jobs:
         with:
           files: |
             ./cmd/gh/copier
+            ./cmd/cli/synctainer
           tag_name: ${{ steps.tag.outputs.sha_short }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

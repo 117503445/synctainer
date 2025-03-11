@@ -98,7 +98,7 @@ func main() {
 		log.Fatal().Err(err).Msg("ConvertToNewImage")
 	}
 
-	newHashImage := strings.Split(newTagImage, ":")[0] + ":" + digest
+	newHashImage := strings.Split(newTagImage, ":")[0] + "@" + digest
 	log.Info().Str("srcImage", srcImage).Str("newTagImage", newTagImage).Str("newHashImage", newHashImage).Msg("ConvertToNewImage")
 
 	if enableFc {
