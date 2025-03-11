@@ -52,13 +52,13 @@ func CliLoad() {
 	}
 	parse()
 
-	m := map[string]string{
-		"registryHost": cli.RegistryHost,
-		"registryUser": cli.RegistryUser,
-		"registryPass": cli.RegistryPass,
-	}
-
 	checkMissing := func() bool {
+		m := map[string]string{
+			"registryHost": cli.RegistryHost,
+			"registryUser": cli.RegistryUser,
+			"registryPass": cli.RegistryPass,
+		}
+
 		fieldMissing := false
 		for k, v := range m {
 			if v == "" {
