@@ -32,7 +32,12 @@ var cli struct {
 }
 
 func CliLoad() {
-	fileCfg := "/workspace/config.toml"
+	const DEV_CFG = false
+
+	fileCfg := ""
+	if DEV_CFG {
+		fileCfg = "/workspace/config.toml"
+	}
 	if !goutils.FileExists(fileCfg) {
 		fileCfg = common.HomeFileCfg
 		if !goutils.FileExists(fileCfg) {
