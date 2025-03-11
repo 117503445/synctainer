@@ -3,7 +3,7 @@ module github.com/117503445/synctainer
 go 1.23.4
 
 require (
-	github.com/117503445/goutils v0.0.0-20250307183532-33774ca8b459
+	github.com/117503445/goutils v0.0.0-20250311181816-414c741ca964
 	github.com/alecthomas/kong v1.8.1
 	github.com/alecthomas/kong-toml v0.2.0
 	github.com/aliyun/aliyun-tablestore-go-sdk v1.7.17
@@ -22,6 +22,7 @@ require (
 	github.com/cloudflare/circl v1.6.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-task/slim-sprig/v3 v3.0.0 // indirect
+	github.com/goccy/go-yaml v1.15.23 // indirect
 	github.com/golang/protobuf v1.5.0 // indirect
 	github.com/google/flatbuffers v23.5.26+incompatible // indirect
 	github.com/google/pprof v0.0.0-20250302191652-9094ed2288e7 // indirect
@@ -34,6 +35,7 @@ require (
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/onsi/ginkgo/v2 v2.23.0 // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect
+	github.com/pelletier/go-toml/v2 v2.2.3 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/quic-go/qpack v0.5.1 // indirect
 	github.com/quic-go/quic-go v0.50.0 // indirect

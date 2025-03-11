@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/117503445/goutils"
 	"github.com/117503445/synctainer/cmd/cli/common"
 	"github.com/117503445/synctainer/cmd/cli/tui"
 	"github.com/alecthomas/kong"
@@ -32,16 +31,26 @@ var cli struct {
 }
 
 func CliLoad() {
-	fileCfg := "/workspace/config.toml"
-	if !goutils.FileExists(fileCfg) {
-		fileCfg = common.HomeFileCfg
-		if !goutils.FileExists(fileCfg) {
-			tui.EditCfg()
-		}
-	}
 
-	ctx := kong.Parse(&cli, kong.Configuration(kongtoml.Loader, fileCfg))
-	log.Info().Interface("cli", cli).Send()
+	// const DEV_CFG = false
+	// fileCfg := ""
+	// if DEV_CFG {
+	// 	fileCfg = "/workspace/config.toml"
+	// }
+	// if !goutils.FileExists(fileCfg) {
+	// 	fileCfg = common.HomeFileCfg
+	// 	if !goutils.FileExists(fileCfg) {
+	// 		tui.EditCfg()
+	// 	}
+	// }
+
+	var ctx *kong.Context
+
+	parse := func() {
+		ctx = kong.Parse(&cli, kong.Configuration(kongtoml.Loader, common.HomeFileCfg))
+		log.Info().Interface("cli", cli).Send()
+	}
+	parse()
 
 	m := map[string]string{
 		"registryHost": cli.RegistryHost,
@@ -49,18 +58,26 @@ func CliLoad() {
 		"registryPass": cli.RegistryPass,
 	}
 
-	fieldMissing := false
-	for k, v := range m {
-		if v == "" {
-			log.Warn().Str("key", k).Msg("field missing")
-			fieldMissing = true
+	checkMissing := func() bool {
+		fieldMissing := false
+		for k, v := range m {
+			if v == "" {
+				log.Warn().Str("key", k).Msg("field missing")
+				fieldMissing = true
+			}
 		}
+		return fieldMissing
 	}
-	if fieldMissing {
-		if fileCfg != common.HomeFileCfg {
+
+	if checkMissing() {
+		// if fileCfg != common.HomeFileCfg {
+		// 	log.Fatal().Msg("field missing")
+		// }
+		tui.EditCfg()
+		parse()
+		if checkMissing() {
 			log.Fatal().Msg("field missing")
 		}
-		tui.EditCfg()
 	}
 
 	err := ctx.Run()
