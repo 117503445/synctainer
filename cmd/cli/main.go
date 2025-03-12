@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -12,23 +13,18 @@ import (
 
 func init() {
 	goutils.InitZeroLog()
-
 }
 
-func (c *cmdSyncImage) Run() error {
-	client := rpc.NewFcProtobufClient(
-		cli.BackendHost, http.DefaultClient,
-	)
+func syncImage(client rpc.Fc, image string, platform string) string {
 	postResp, err := client.PostTask(context.Background(), &rpc.ReqPostTask{
-		Image:    c.Image,
-		Platform: c.Platform,
+		Image:    image,
+		Platform: platform,
 		Registry: cli.RegistryHost,
 		Username: cli.RegistryUser,
 		Password: cli.RegistryPass,
 	})
 	if err != nil {
 		log.Fatal().Err(err).Msg("PostTask")
-		return err
 	}
 
 	log.Debug().Interface("postResp", postResp).Msg("PostTask")
@@ -45,14 +41,97 @@ func (c *cmdSyncImage) Run() error {
 		})
 		if err != nil {
 			log.Fatal().Err(err).Msg("GetTask")
-			return err
 		}
 
 		log.Debug().Interface("getResp", getResp).Send()
 		if getResp.Digest != "" {
 			log.Info().Str("hashImage", getResp.Digest).Msg("Task started")
-			break
+			return getResp.Digest
 		}
+	}
+
+	return ""
+}
+
+func (c *cmdSyncImage) Run() error {
+	client := rpc.NewFcProtobufClient(
+		cli.BackendHost, http.DefaultClient,
+	)
+
+	syncImage(client, c.Image, c.Platform)
+
+	return nil
+}
+
+func (c *cmdSyncCompose) Run() error {
+	if !goutils.FileExists(c.ComposePath) {
+		log.Fatal().Str("ComposePath", c.ComposePath).Msg("Compose file not found")
+	}
+
+	readServiceImage := func(file string) map[string]string {
+		serviceImage := make(map[string]string)
+		composeMap := make(map[string]any)
+		err := goutils.ReadYaml(file, &composeMap)
+		if err != nil {
+			log.Fatal().Err(err).Msg("ReadYaml")
+		}
+		for serviceName, service := range composeMap["services"].(map[string]any) {
+			if service.(map[string]any)["image"] != nil {
+				serviceImage[serviceName] = service.(map[string]any)["image"].(string)
+			}
+		}
+		return serviceImage
+	}
+
+	composeServiceImage := readServiceImage(c.ComposePath)
+	overrideMap := make(map[string]any)
+	overrideServiceImage := make(map[string]string)
+	if goutils.FileExists(c.OverridePath) {
+		overrideServiceImage = readServiceImage(c.OverridePath)
+		err := goutils.ReadYaml(c.OverridePath, &overrideMap)
+		if err != nil {
+			log.Fatal().Err(err).Msg("ReadYaml")
+		}
+	}
+
+	log.Debug().
+		Interface("composeServiceImage", composeServiceImage).
+		Interface("overrideServiceImage", overrideServiceImage).Send()
+
+	client := rpc.NewFcProtobufClient(
+		cli.BackendHost, http.DefaultClient,
+	)
+
+	for service, image := range composeServiceImage {
+		if _, ok := overrideServiceImage[service]; ok {
+			continue
+		}
+
+		hashImage := syncImage(client, image, c.Platform)
+		if overrideMap["services"] == nil {
+			overrideMap["services"] = map[string]any{}
+		}
+
+		overrideMap["services"].(map[string]any)[service] = map[string]any{
+			"image": hashImage,
+		}
+	}
+
+	if goutils.FileExists(c.OverridePath) {
+		src := c.OverridePath
+		dest := fmt.Sprintf("%s.%s.bak", c.OverridePath, goutils.TimeStrMilliSec())
+		err := goutils.CopyFile(src, dest)
+		if err != nil {
+			log.Fatal().Err(err).
+				Str("src", src).
+				Str("dest", dest).
+				Msg("backup")
+		}
+	}
+
+	err := goutils.WriteYaml(c.OverridePath, overrideMap)
+	if err != nil {
+		log.Fatal().Err(err).Msg("WriteYaml")
 	}
 
 	return nil

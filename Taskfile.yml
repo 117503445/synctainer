@@ -42,6 +42,8 @@ tasks:
       - ossutil cp -rf ./fe/dist oss://synctainer
 
   cli-run:
+    dir: ./cmd/cli
     cmds:
       # - go run ./cmd/cli
-      - go run ./cmd/cli sync-image traefik
+      # - go run . sync-image traefik
+      - go run . sync-compose

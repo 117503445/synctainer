@@ -14,6 +14,9 @@ type cmdSyncImage struct {
 }
 
 type cmdSyncCompose struct {
+	ComposePath  string `help:"Compose file path" default:"compose.yaml"`
+	OverridePath string `help:"Compose Override path" default:"compose.override.yaml"`
+	Platform string `help:"Platform" default:"linux/amd64"`
 }
 
 type cmdEditConfig struct {
