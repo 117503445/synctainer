@@ -1,5 +1,5 @@
-name: copy
-run-name: "Copy ${{ github.event.inputs.image }} ${{ github.event.inputs.platform }} to ACR"
+name: sync
+run-name: "Sync ${{ github.event.inputs.image }} ${{ github.event.inputs.platform }}"
 
 on:
   workflow_dispatch:
