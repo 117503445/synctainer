@@ -18,7 +18,7 @@ import type { ClientConfiguration } from "twirpscript";
 export interface ReqPostTask {
   image: string;
   platform: string;
-  registry: string;
+  targetImage: string;
   username: string;
   password: string;
 }
@@ -220,7 +220,7 @@ export const ReqPostTask = {
     return {
       image: "",
       platform: "",
-      registry: "",
+      targetImage: "",
       username: "",
       password: "",
       ...msg,
@@ -240,8 +240,8 @@ export const ReqPostTask = {
     if (msg.platform) {
       writer.writeString(2, msg.platform);
     }
-    if (msg.registry) {
-      writer.writeString(3, msg.registry);
+    if (msg.targetImage) {
+      writer.writeString(3, msg.targetImage);
     }
     if (msg.username) {
       writer.writeString(4, msg.username);
@@ -271,7 +271,7 @@ export const ReqPostTask = {
           break;
         }
         case 3: {
-          msg.registry = reader.readString();
+          msg.targetImage = reader.readString();
           break;
         }
         case 4: {
@@ -670,7 +670,7 @@ export const ReqPostTaskJSON = {
     return {
       image: "",
       platform: "",
-      registry: "",
+      targetImage: "",
       username: "",
       password: "",
       ...msg,
@@ -690,8 +690,8 @@ export const ReqPostTaskJSON = {
     if (msg.platform) {
       json["platform"] = msg.platform;
     }
-    if (msg.registry) {
-      json["registry"] = msg.registry;
+    if (msg.targetImage) {
+      json["targetImage"] = msg.targetImage;
     }
     if (msg.username) {
       json["username"] = msg.username;
@@ -714,9 +714,9 @@ export const ReqPostTaskJSON = {
     if (_platform_) {
       msg.platform = _platform_;
     }
-    const _registry_ = json["registry"];
-    if (_registry_) {
-      msg.registry = _registry_;
+    const _targetImage_ = json["targetImage"];
+    if (_targetImage_) {
+      msg.targetImage = _targetImage_;
     }
     const _username_ = json["username"];
     if (_username_) {

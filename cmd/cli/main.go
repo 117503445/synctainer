@@ -19,7 +19,7 @@ func syncImage(client rpc.Fc, image string, platform string) string {
 	postResp, err := client.PostTask(context.Background(), &rpc.ReqPostTask{
 		Image:    image,
 		Platform: platform,
-		Registry: cli.RegistryHost,
+		TargetImage: cli.TargetImage,
 		Username: cli.RegistryUser,
 		Password: cli.RegistryPass,
 	})

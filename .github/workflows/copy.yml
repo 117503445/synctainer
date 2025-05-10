@@ -19,8 +19,8 @@ on:
         description: "fc callback"
         required: false
         default: ""
-      registry:
-        description: "target registry, exp: registry.cn-hangzhou.aliyuncs.com"
+      targetImage:
+        description: "target Image, exp: registry.cn-hangzhou.aliyuncs.com/wizz-mirror/sync"
         required: true
       username:
         description: "target registry username"
@@ -54,7 +54,7 @@ jobs:
           PLATFORM: "${{ github.event.inputs.platform }}"
           TASK_ID: "${{ github.event.inputs.taskId }}"
           FC_CALLBACK: "${{ github.event.inputs.fcCallback }}"
-          REGISTRY: "${{ github.event.inputs.registry }}"
+          TARGET_IMAGE: "${{ github.event.inputs.targetImage }}"
           USERNAME: "${{ github.event.inputs.username }}"
           PASSWORD: "${{ github.event.inputs.password }}"
           RUN_ID: "${{ github.run_id }}"

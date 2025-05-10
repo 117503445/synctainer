@@ -10,18 +10,18 @@ var cfg struct {
 	FcCallback string `env:"FC_CALLBACK"`
 	RunId      string `env:"RUN_ID"`
 
-	Image    string `env:"IMAGE"`
-	Platform string `env:"PLATFORM" default:"linux/amd64"`
-	TaskId   string `env:"TASK_ID"`
-	Registry string `env:"REGISTRY"`
-	Username string `env:"USERNAME"`
-	Password string `env:"PASSWORD"`
+	Image       string `env:"IMAGE"`
+	Platform    string `env:"PLATFORM" default:"linux/amd64"`
+	TaskId      string `env:"TASK_ID"`
+	TargetImage string `env:"TARGET_IMAGE"`
+	Username    string `env:"USERNAME"`
+	Password    string `env:"PASSWORD"`
 }
 
 func CfgLoad() {
 	kong.Parse(&cfg, kong.Configuration(kongtoml.Loader))
-	if cfg.Registry == "" {
-		log.Fatal().Msg("Registry is empty")
+	if cfg.TargetImage == "" {
+		log.Fatal().Msg("TargetImage is empty")
 	}
 	if cfg.Image == "" {
 		log.Fatal().Msg("Image is empty")
@@ -39,7 +39,7 @@ func CfgLoad() {
 		Str("Platform", cfg.Platform).
 		Str("Image", cfg.Image).
 		Str("TaskId", cfg.TaskId).
-		Str("Registry", cfg.Registry).
+		Str("TargetImage", cfg.TargetImage).
 		Str("Username", cfg.Username).
 		Str("RunId", cfg.RunId).
 		Send()

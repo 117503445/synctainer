@@ -16,7 +16,7 @@ type cmdSyncImage struct {
 type cmdSyncCompose struct {
 	ComposePath  string `help:"Compose file path" default:"compose.yaml"`
 	OverridePath string `help:"Compose Override path" default:"compose.override.yaml"`
-	Platform string `help:"Platform" default:"linux/amd64"`
+	Platform     string `help:"Platform" default:"linux/amd64"`
 }
 
 type cmdEditConfig struct {
@@ -28,7 +28,7 @@ var cli struct {
 	EditConfig  cmdEditConfig  `cmd:"edit-config" help:"Edit config"`
 
 	BackendHost  string `help:"Backend host" default:"https://synctainer-api.117503445.top"`
-	RegistryHost string `help:"Registry host" default:"registry.cn-hangzhou.aliyuncs.com"`
+	TargetImage  string `help:"Target Image" default:"registry.cn-hangzhou.aliyuncs.com/117503445-mirror/sync"`
 	RegistryUser string
 	RegistryPass string
 }
@@ -57,7 +57,7 @@ func CliLoad() {
 
 	checkMissing := func() bool {
 		m := map[string]string{
-			"registryHost": cli.RegistryHost,
+			"targetImage": cli.TargetImage,
 			"registryUser": cli.RegistryUser,
 			"registryPass": cli.RegistryPass,
 		}

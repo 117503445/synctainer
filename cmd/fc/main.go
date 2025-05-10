@@ -33,7 +33,7 @@ func newServer(githubToken string, tm *ots.TableManager, fcCallback string) *ser
 }
 
 func (s *server) PostTask(ctx context.Context, req *rpc.ReqPostTask) (*rpc.RespPostTask, error) {
-	tagImage, err := convert.ConvertToNewImage(req.Image, req.Platform)
+	tagImage, err := convert.ConvertToNewImage(req.Image, req.Platform, req.TargetImage)
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +45,7 @@ func (s *server) PostTask(ctx context.Context, req *rpc.ReqPostTask) (*rpc.RespP
 		return nil, err
 	}
 
-	err = gh.TriggerGithubAction(id, req.Image, req.Platform, req.Registry, req.Username, req.Password, s.githubToken, s.fcCallback)
+	err = gh.TriggerGithubAction(id, req.Image, req.Platform, req.TargetImage, req.Username, req.Password, s.githubToken, s.fcCallback)
 	if err != nil {
 		return nil, err
 	}

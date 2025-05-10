@@ -27,7 +27,7 @@ function App() {
   const [image, setImage] = useState("")
   const [platform, setPlatform] = useState("linux/amd64")
 
-  const [registry, setRegistry] = useState(localStorage.getItem('registry') || "")
+  const [targetImage, setTargetImage] = useState(localStorage.getItem('targetImage') || "")
   const [username, setUsername] = useState(localStorage.getItem('username') || "")
   const [password, setPassword] = useState(localStorage.getItem('password') || "")
 
@@ -45,10 +45,10 @@ function App() {
 
   useEffect(() => {
     // 监听状态变化并更新 localStorage
-    localStorage.setItem('registry', registry);
+    localStorage.setItem('targetImage', targetImage);
     localStorage.setItem('username', username);
     localStorage.setItem('password', password);
-  }, [registry, username, password]);
+  }, [targetImage, username, password]);
 
   useEffect(() => {
     return () => {
@@ -99,9 +99,23 @@ function App() {
           }}
         />
 
-        <TextField required label="Target Registry" variant="outlined" value={registry}
-          placeholder='registry.cn-hangzhou.aliyuncs.com'
-          onChange={(e) => setRegistry(e.target.value)} />
+        <TextField
+          required
+          label="Target Image"
+          variant="outlined"
+          value={targetImage}
+          placeholder="registry.cn-hangzhou.aliyuncs.com/117503445-mirror/sync"
+          onChange={(e) => setTargetImage(e.target.value)}
+          multiline // Enables textarea
+          minRows={2} // Optional: minimum number of rows
+          maxRows={Infinity} // Optional: allows unlimited expansion
+          inputProps={{
+            style: {
+              whiteSpace: 'pre-wrap', // Preserves whitespace and allows line wrap
+              wordWrap: 'break-word', // Allows long words to break and wrap
+            },
+          }}
+        />
         <TextField required label="Username" variant="outlined" value={username} onChange={(e) => setUsername(e.target.value)} />
         <TextField required label="Password" type={showPassword ? 'text' : 'password'} variant="outlined" value={password}
           InputProps={{
@@ -145,7 +159,7 @@ function App() {
               const respPostTask = await PostTask({
                 image: image,
                 platform: platform,
-                registry: registry,
+                targetImage: targetImage,
                 username: username,
                 password: password,
               })

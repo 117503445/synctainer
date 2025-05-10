@@ -17,7 +17,7 @@ service Fc {
 message ReqPostTask{
   string image = 1;
   string platform = 2;
-  string registry = 3;
+  string targetImage = 3;
   string username = 4;
   string password = 5;
 }

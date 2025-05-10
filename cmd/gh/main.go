@@ -22,6 +22,11 @@ func main() {
 
 	enableFc := cfg.FcCallback != ""
 
+	newRef, err := ref.New(cfg.TargetImage)
+	if err != nil {
+		log.Fatal().Err(err).Msg("ref.New")
+	}
+
 	var client rpc.Fc
 	if enableFc {
 		client = rpc.NewFcProtobufClient(
@@ -63,37 +68,7 @@ func main() {
 	srcRef.Digest = digest
 	srcImage := srcRef.CommonName()
 
-	// srcImage := ""
-	// if strings.Contains(cfg.Image, "sha256") {
-	// 	srcImage = cfg.Image
-	// } else {
-	// 	srcRef, err := ref.New(cfg.Image)
-	// 	if err != nil {
-	// 		log.Fatal().Err(err).Msg("ref.New")
-	// 	}
-	// 	log.Debug().Str("srcRef", srcRef.CommonName()).Msg("")
-
-	// 	output, err := gexec.Run(
-	// 		gexec.Commands([]string{
-	// 			"regctl", "image", "digest", cfg.Image, "--platform", cfg.Platform,
-	// 		}),
-	// 		&gexec.RunCfg{
-	// 			Writers: []io.Writer{os.Stdout},
-	// 		},
-	// 	)
-	// 	if err != nil {
-	// 		log.Fatal().Err(err).Msg("Exec")
-	// 	}
-
-	// 	digest := strings.TrimSpace(output)
-	// 	if !strings.HasPrefix(digest, "sha256:") {
-	// 		log.Fatal().Str("digest", digest).Msg("digest not start with sha256:")
-	// 	}
-	// 	srcRef.Digest = digest
-	// 	srcImage = srcRef.CommonName()
-	// }
-
-	newTagImage, err := convert.ConvertToNewImage(cfg.Image, cfg.Platform)
+	newTagImage, err := convert.ConvertToNewImage(cfg.Image, cfg.Platform, cfg.TargetImage)
 	if err != nil {
 		log.Fatal().Err(err).Msg("ConvertToNewImage")
 	}
@@ -114,7 +89,7 @@ func main() {
 	}
 
 	cmds := []string{
-		"regctl", "registry", "login", cfg.Registry, "--user", cfg.Username, "--pass", cfg.Password,
+		"regctl", "registry", "login", newRef.Registry, "--user", cfg.Username, "--pass", cfg.Password,
 	}
 	cmdStr := strings.Join(cmds[:len(cmds)-1], " ") + " ***"
 
