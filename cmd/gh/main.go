@@ -108,7 +108,7 @@ func main() {
 
 	_, err = gexec.Run(
 		gexec.Commands([]string{
-			"regctl", "image", "copy", srcImage, newTagImage, "--verbosity", "trace",
+			"regctl", "image", "copy", srcImage, newTagImage, "--verbosity", "info",
 		}),
 		&gexec.RunCfg{
 			Writers: []io.Writer{os.Stdout},
